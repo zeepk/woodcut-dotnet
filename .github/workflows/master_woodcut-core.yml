@@ -9,17 +9,15 @@ on:
       - master
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: ./backend
+
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-      - script: # script path or inline
-        workingDirectory: backend/
-        displayName: #
-        failOnStderr: #
-        env:  # mapping of environment variables to add
-
       - uses: actions/checkout@v2
 
       - name: Set up .NET Core
@@ -48,11 +46,6 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - script: # script path or inline
-        workingDirectory: backend/
-        displayName: #
-        failOnStderr: #
-        env:  # mapping of environment variables to add
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
