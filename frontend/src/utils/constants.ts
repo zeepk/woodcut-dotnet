@@ -36,7 +36,7 @@ export const itemIconUrl =
 	'https://secure.runescape.com/m=itemdb_rs/api/catalogue/detail.json?item=';
 export const twitterUsername = '@matthughes2112';
 export const twitterUrl = `https://twitter.com/${twitterUsername}`;
-export const githubUrl = 'https://github.com/zeepk/woodcut-v2';
+export const githubUrl = 'https://github.com/zeepk/woodcut';
 
 // icon urls
 export const archJournal =
