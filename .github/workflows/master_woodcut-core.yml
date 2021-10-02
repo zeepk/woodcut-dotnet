@@ -9,6 +9,10 @@ on:
       - master
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: ./backend
+
 jobs:
   build:
     runs-on: windows-latest
@@ -53,5 +57,5 @@ jobs:
         with:
           app-name: 'woodcut-core'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_71C525EEF04C4954B8B55A98C548BE85 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D743D082D44C47B4BB21C67D8A7D6C60 }}
           package: .
