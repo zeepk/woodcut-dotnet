@@ -28,6 +28,8 @@ export const resetUrl = `${apiBaseUrl}/authmanagement/reset`;
 export const vosUrl = `${apiBaseUrl}/users/vos`;
 export const avatarUrlPre = 'https://secure.runescape.com/m=avatar-rs/';
 export const avatarUrlPost = '/chat.png';
+export const defaultAvatarUrl =
+	'https://secure.runescape.com/m=avatar-rs/default_chat.png';
 export const clanFlagUrlPre = 'https://services.runescape.com/m=avatar-rs/';
 export const clanFlagUrlPost = '/clanmotif.png';
 export const itemPriceUrl =
