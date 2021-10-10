@@ -13,8 +13,8 @@ export function Timers() {
 	const [timeTilReset, setTimeTilReset] = useState(defaultDiff);
 	const [timeTilGainsReset, setTimeTilGainsReset] = useState(defaultDiff);
 	const [timer, setTimer] = useState(false);
-	let nextReset = DateTime.now().setZone('GMT').endOf('day');
-	let nextGainsReset = DateTime.now().setZone('US/Mountain').endOf('day');
+	let nextReset = DateTime.utc().endOf('day');
+	let nextGainsReset = DateTime.utc().endOf('hour').plus({ hour: 10 });
 
 	const updateTime = () => {
 		let now = DateTime.now();
@@ -34,6 +34,14 @@ export function Timers() {
 		return roundedSeconds < 10 ? `0${roundedSeconds}` : `${roundedSeconds}`;
 	};
 
+	const formattedMinutes = (minutes: number | undefined) => {
+		if (!minutes) {
+			return '0';
+		}
+		const roundedMinutes = Math.floor(minutes);
+		return roundedMinutes < 10 ? `0${roundedMinutes}` : `${roundedMinutes}`;
+	};
+
 	if (!timer) {
 		setTimer(true);
 		setInterval(updateTime, 1000);
@@ -44,17 +52,17 @@ export function Timers() {
 			<div className="p-d-flex p-jc-between p-py-1">
 				<div>{dailyResetText}</div>
 				<div>
-					{`${timeTilReset.hours}:${timeTilReset.minutes}:${formattedSeconds(
-						timeTilReset.seconds,
-					)}`}
+					{`${timeTilReset.hours}:${formattedMinutes(
+						timeTilReset.minutes,
+					)}:${formattedSeconds(timeTilReset.seconds)}`}
 				</div>
 			</div>
 			<div className="p-d-flex p-jc-between p-py-1">
 				<div>{gainsResetText}</div>
 				<div>
-					{`${timeTilGainsReset.hours}:${
-						timeTilGainsReset.minutes
-					}:${formattedSeconds(timeTilGainsReset.seconds)}`}
+					{`${timeTilGainsReset.hours}:${formattedMinutes(
+						timeTilGainsReset.minutes,
+					)}:${formattedSeconds(timeTilGainsReset.seconds)}`}
 				</div>
 			</div>
 		</div>
