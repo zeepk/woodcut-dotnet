@@ -8,6 +8,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import {
 	selectUserRs3Rsn,
 	selectUserLoading,
+	selectRsnLoading,
 	getRs3Rsn,
 	updateRs3Rsn,
 } from 'features/Common/commonSlice';
@@ -30,6 +31,7 @@ export const AccountSettings: FunctionComponent<props> = ({ handleClose }) => {
 	const dispatch = useAppDispatch();
 	const rs3Rsn = useAppSelector(selectUserRs3Rsn);
 	const loading = useAppSelector(selectUserLoading);
+	const rsnLoading = useAppSelector(selectRsnLoading);
 	const [newRs3Rsn, setNewRs3Rsn] = useState('');
 	const invalid =
 		isNullUndefinedOrWhitespace(newRs3Rsn) || newRs3Rsn.length > rsnMaxLength;
@@ -41,16 +43,18 @@ export const AccountSettings: FunctionComponent<props> = ({ handleClose }) => {
 		}
 	}, [rs3Rsn, dispatch]);
 
-	const handleUpdateRs3Rsn = async () => {
+	const handleUpdateRs3Rsn = async (e: any) => {
+		e.preventDefault();
 		const result: any = await dispatch(updateRs3Rsn(newRs3Rsn));
-		if (!result.payload?.data.success) {
+		if (result.payload?.data.success === false) {
 			toast?.current?.show({
 				severity: 'error',
 				detail: updateRsnErrorMessage,
 				life: formErrorToastLifetime,
 			});
+		} else {
+			handleClose();
 		}
-		handleClose();
 	};
 
 	const rs3RsnString = isNullUndefinedOrWhitespace(rs3Rsn)
@@ -64,7 +68,7 @@ export const AccountSettings: FunctionComponent<props> = ({ handleClose }) => {
 		/>
 	) : (
 		<form
-			onSubmit={(e) => handleUpdateRs3Rsn()}
+			onSubmit={(e) => handleUpdateRs3Rsn(e)}
 			className="p-d-flex p-flex-column"
 		>
 			<div className="container--rs3-account">
@@ -75,7 +79,7 @@ export const AccountSettings: FunctionComponent<props> = ({ handleClose }) => {
 					value={newRs3Rsn}
 					onChange={(e) => setNewRs3Rsn(e.target.value)}
 				/>
-				{loading ? (
+				{rsnLoading ? (
 					<ProgressBar
 						className="progressbar--create-form p-mt-3"
 						mode="indeterminate"
@@ -84,7 +88,7 @@ export const AccountSettings: FunctionComponent<props> = ({ handleClose }) => {
 					<Button
 						label={accountSettingsRs3RsnUpdateButtonText}
 						className="p-button-success btn--login-form"
-						onClick={() => handleUpdateRs3Rsn()}
+						onClick={(e) => handleUpdateRs3Rsn(e)}
 						disabled={invalid}
 					/>
 				)}
