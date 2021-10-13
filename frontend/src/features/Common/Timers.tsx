@@ -13,16 +13,18 @@ export function Timers() {
 	const [timeTilReset, setTimeTilReset] = useState(defaultDiff);
 	const [timeTilGainsReset, setTimeTilGainsReset] = useState(defaultDiff);
 	const [timer, setTimer] = useState(false);
-	let nextReset = DateTime.utc().endOf('day');
-	let nextGainsReset = DateTime.utc().endOf('hour').plus({ hour: 10 });
+	let nextReset = DateTime.utc().endOf('day').set({ hour: 23 });
+	let nextGainsReset = DateTime.utc().endOf('day').set({ hour: 5 });
+
+	const timerHasNotUpdated = defaultDiff === timeTilReset;
 
 	const updateTime = () => {
 		let now = DateTime.now();
 		setTimeTilReset(
-			nextReset.diff(now, ['hours', 'minutes', 'seconds']).toObject(),
+			nextReset.diff(now, ['hours', 'minutes', 'seconds']).toObject()
 		);
 		setTimeTilGainsReset(
-			nextGainsReset.diff(now, ['hours', 'minutes', 'seconds']).toObject(),
+			nextGainsReset.diff(now, ['hours', 'minutes', 'seconds']).toObject()
 		);
 	};
 
@@ -42,6 +44,13 @@ export function Timers() {
 		return roundedMinutes < 10 ? `0${roundedMinutes}` : `${roundedMinutes}`;
 	};
 
+	const formattedHours = (hours: number | undefined) => {
+		if (!hours) {
+			return '0';
+		}
+		return hours % 24;
+	};
+
 	if (!timer) {
 		setTimer(true);
 		setInterval(updateTime, 1000);
@@ -52,16 +61,16 @@ export function Timers() {
 			<div className="p-d-flex p-jc-between p-py-1">
 				<div>{dailyResetText}</div>
 				<div>
-					{`${timeTilReset.hours}:${formattedMinutes(
-						timeTilReset.minutes,
+					{`${formattedHours(timeTilReset.hours)}:${formattedMinutes(
+						timeTilReset.minutes
 					)}:${formattedSeconds(timeTilReset.seconds)}`}
 				</div>
 			</div>
 			<div className="p-d-flex p-jc-between p-py-1">
 				<div>{gainsResetText}</div>
 				<div>
-					{`${timeTilGainsReset.hours}:${formattedMinutes(
-						timeTilGainsReset.minutes,
+					{`${formattedHours(timeTilGainsReset.hours)}:${formattedMinutes(
+						timeTilGainsReset.minutes
 					)}:${formattedSeconds(timeTilGainsReset.seconds)}`}
 				</div>
 			</div>
