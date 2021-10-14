@@ -3,10 +3,6 @@ import 'features/Common/common.scss';
 import { DateTime, Duration } from 'luxon';
 import { dailyResetText, gainsResetText } from 'utils/constants';
 
-type props = {
-	isSidebarOpen: boolean;
-};
-
 export function Timers() {
 	const defaultDiff = Duration.fromObject({
 		hours: 0,

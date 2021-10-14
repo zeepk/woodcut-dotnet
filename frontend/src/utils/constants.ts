@@ -1,9 +1,18 @@
 import MaxCape from 'assets/images/maxCape.png';
 import SkillIcon from 'assets/skillIcons/1_overall.png';
 import QuestIcon from 'assets/images/questIcon.png';
+import { DateTime } from 'luxon';
 
 // version
 export const versionNumber = '1.0.0';
+export const dxpStart = DateTime.fromJSDate(
+	new Date('17 October 1999 12:00 UTC'),
+);
+export const dxpEnd = DateTime.fromJSDate(
+	new Date('19 October 1999 12:00 UTC'),
+);
+export const isDxpUpcoming = DateTime.now() < dxpStart;
+export const isDxpOver = DateTime.now() > dxpEnd;
 
 // urls
 
@@ -110,6 +119,7 @@ export const dailyResetText = 'Daily reset in: ';
 export const gainsResetText = 'Woodcut gains reset in: ';
 export const checkEmailText =
 	'Check your email (and your spam) for a password reset link!';
+export const dxpTimerText = `Double XP ${isDxpUpcoming ? 'starts' : 'ends'} in`;
 
 // thresholds
 
@@ -147,6 +157,10 @@ export const all120Xp =
 
 // should be 5,600,000,000 as of Archaeology
 export const maxXp = numberOfSkills * maxSkillXp;
+
+export const daysBeforeDxpToShowTimer = 30;
+export const isDxpClose =
+	dxpStart.diff(DateTime.now()).as('days') < daysBeforeDxpToShowTimer;
 
 // types
 
@@ -289,7 +303,3 @@ export const passwordResetSuccessMessage =
 	'Password reset successfully! Redirecting to the home page...';
 export const passwordResetRequestInvalidUserMessage =
 	'Invalid email. Double check and try again.';
-
-// flags
-
-export const isDxpActive = process.env.REACT_APP_DXP_ACTIVE === 'true';

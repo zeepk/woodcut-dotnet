@@ -5,7 +5,7 @@ import { Column } from 'primereact/column';
 import { useAppSelector } from '../../../app/hooks';
 import { selectSkills } from 'features/RS3/rs3Slice';
 import { skillIcon, skillNameArray } from 'utils/helperFunctions';
-import { gainPeriods, isDxpActive } from 'utils/constants';
+import { gainPeriods, isDxpOver } from 'utils/constants';
 import { Rs3Skill } from '../rs3Types';
 import { Dropdown } from 'primereact/dropdown';
 
@@ -25,7 +25,7 @@ const dayGainTemplate = (rowData: Rs3Skill) => {
 };
 
 export default function Rs3PlayerStatTable() {
-	const defaultIndex = isDxpActive ? gainPeriods.length - 1 : 0;
+	const defaultIndex = !isDxpOver ? gainPeriods.length - 1 : 0;
 	const [gainPeriod, setGainPeriod] = useState(gainPeriods[defaultIndex]);
 	const skills = useAppSelector(selectSkills);
 

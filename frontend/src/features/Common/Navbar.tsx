@@ -18,6 +18,7 @@ import { AuthButton } from 'features/Common/Account/AuthButton';
 import { navbarMenuItems } from 'utils/constants';
 import Logo from '../../assets/images/logo.png';
 import 'features/Common/common.scss';
+import { DxpTimer } from './DxpTimer';
 
 export function Navbar() {
 	const history = useHistory();
@@ -58,6 +59,10 @@ export function Navbar() {
 
 	const navbarItems = [
 		...navbarMenuItemComponents,
+		{
+			template: () => <DxpTimer />,
+			className: 'container--dxp',
+		},
 		{
 			template: () => (
 				<form
