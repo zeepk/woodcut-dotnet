@@ -81,7 +81,7 @@ export default function Rs3PlayerLandingPage() {
 	};
 
 	return (
-		<div className="p-p-2">
+		<div className="p-p-2 p-mt-4">
 			<div className="p-mb-6 p-mb-lg-0">
 				<Rs3PlayerInfo />
 			</div>

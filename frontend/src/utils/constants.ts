@@ -2,6 +2,9 @@ import MaxCape from 'assets/images/maxCape.png';
 import SkillIcon from 'assets/skillIcons/1_overall.png';
 import QuestIcon from 'assets/images/questIcon.png';
 
+// version
+export const versionNumber = '1.0.0';
+
 // urls
 
 export const apiBaseUrl = process.env.REACT_APP_API_URL;
@@ -271,8 +274,9 @@ export enum accountTypes {
 }
 
 export const footerLinks = [
-	{ id: 0, text: 'github code', link: githubUrl, class: 'code' },
-	{ id: 1, text: 'twitter / feedback', link: twitterUrl, class: 'twitter' },
+	{ id: 0, text: `v${versionNumber}`, class: 'version' },
+	{ id: 1, text: 'github code', link: githubUrl, class: 'code' },
+	{ id: 2, text: 'twitter / feedback', link: twitterUrl, class: 'twitter' },
 ];
 
 export const usernameTakenErrorMessage = 'is already taken';
