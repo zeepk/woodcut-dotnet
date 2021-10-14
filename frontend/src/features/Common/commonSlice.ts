@@ -42,6 +42,7 @@ export interface CommonState {
 		rs3Rsn: string | null | undefined;
 		osrsRsn: string;
 		loading: boolean;
+		rsnLoading: boolean;
 		following: Array<string>;
 	};
 	vos: {
@@ -70,6 +71,7 @@ const initialState: CommonState = {
 		rs3Rsn: null,
 		osrsRsn: '',
 		loading: false,
+		rsnLoading: false,
 		following: [],
 	},
 	vos: {
@@ -220,6 +222,7 @@ export const commonSlice = createSlice({
 				rs3Rsn: null,
 				osrsRsn: '',
 				loading: false,
+				rsnLoading: false,
 				following: [],
 			};
 		},
@@ -278,11 +281,13 @@ export const commonSlice = createSlice({
 				state.account.rs3Rsn = action.payload?.data;
 			})
 			.addCase(updateRs3Rsn.pending, (state) => {
-				state.account.loading = true;
+				state.account.rsnLoading = true;
 			})
 			.addCase(updateRs3Rsn.fulfilled, (state, action) => {
-				state.account.loading = false;
-				state.account.rs3Rsn = action.payload?.data.data;
+				state.account.rsnLoading = false;
+				if (action.payload?.data.success) {
+					state.account.rs3Rsn = action.payload?.data.data;
+				}
 			})
 			.addCase(getCurrentPlayerCount.fulfilled, (state, action) => {
 				state.playerCount.count = action.payload.data;
@@ -363,6 +368,8 @@ export const selectUserRs3Rsn = (state: RootState) =>
 	state.common.account.rs3Rsn;
 export const selectUserLoading = (state: RootState) =>
 	state.common.account.loading;
+export const selectRsnLoading = (state: RootState) =>
+	state.common.account.rsnLoading;
 export const selectPlayerCount = (state: RootState) =>
 	state.common.playerCount.count;
 export const selectPlayerCountLoading = (state: RootState) =>

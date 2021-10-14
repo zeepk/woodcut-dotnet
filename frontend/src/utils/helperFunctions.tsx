@@ -42,7 +42,7 @@ import {
 import { Rs3Activity, Rs3Skill } from 'features/RS3/rs3Types';
 
 export const isNullUndefinedOrWhitespace = (
-	text: string | null | undefined
+	text: string | null | undefined,
 ) => {
 	if (text === null || text === undefined) {
 		return true;
@@ -203,7 +203,6 @@ export const calcVirtualLevel = (rowData: {
 	} else if (rowData.xp >= 14391160) {
 		return 100;
 	} else {
-		console.log('Error calculating virtual level.');
 		return 0;
 	}
 };

@@ -110,7 +110,7 @@ export default function ExistingUserLandingPage() {
 	}
 
 	return (
-		<div className="container--logged-in-user p-d-flex p-jc-center p-jc-xl-around p-ai-start p-p-1 p-p-md-5 p-flex-wrap">
+		<div className="container--logged-in-user p-d-flex p-jc-center p-jc-xl-around p-ai-start p-p-1 p-p-md-5 p-flex-wrap p-mt-4">
 			<div className="p-mb-2">
 				<DashboardUserInfo />
 			</div>

@@ -86,7 +86,7 @@ export function Navbar() {
 			<Sidebar visible={sidebarVisible} onHide={() => setSidebarVisible(false)}>
 				<SidebarContent />
 			</Sidebar>
-			<Menubar className="navbar" model={navbarItems} start={start} />;
+			<Menubar className="navbar" model={navbarItems} start={start} />
 		</div>
 	);
 }

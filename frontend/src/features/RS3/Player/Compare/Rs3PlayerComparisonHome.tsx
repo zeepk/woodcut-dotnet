@@ -42,7 +42,7 @@ export default function Rs3PlayerComparisonHome() {
 	};
 
 	return (
-		<div className="container--comparison-home p-d-flex p-flex-column p-ai-center">
+		<div className="container--comparison-home p-d-flex p-flex-column p-ai-center p-mt-4">
 			<Toast ref={toast} />
 			<form
 				className="p-d-flex p-flex-column p-ai-center"

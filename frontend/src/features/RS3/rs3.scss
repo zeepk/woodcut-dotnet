@@ -241,6 +241,10 @@ h1 {
 		height: 40rem;
 		max-height: 90vh;
 
+		h3 {
+			text-align: center;
+		}
+
 		&.activities {
 			width: 28vw;
 			min-width: 20rem;
