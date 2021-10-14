@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'features/Common/common.scss';
 import { DateTime, Duration } from 'luxon';
 import { dailyResetText, gainsResetText } from 'utils/constants';
-import { setInterval } from 'timers';
+
+type props = {
+	isSidebarOpen: boolean;
+};
 
 export function Timers() {
 	const defaultDiff = Duration.fromObject({
@@ -12,19 +15,23 @@ export function Timers() {
 	}).toObject();
 	const [timeTilReset, setTimeTilReset] = useState(defaultDiff);
 	const [timeTilGainsReset, setTimeTilGainsReset] = useState(defaultDiff);
-	const [timer, setTimer] = useState(false);
 	let nextReset = DateTime.utc().endOf('day').set({ hour: 23 });
 	let nextGainsReset = DateTime.utc().endOf('day').set({ hour: 5 });
 
-	const timerHasNotUpdated = defaultDiff === timeTilReset;
+	useEffect(() => {
+		const interval = window.setInterval(() => {
+			updateTime();
+		}, 1000);
+		return () => window.clearInterval(interval);
+	});
 
 	const updateTime = () => {
-		let now = DateTime.now();
+		const now = DateTime.now();
 		setTimeTilReset(
-			nextReset.diff(now, ['hours', 'minutes', 'seconds']).toObject()
+			nextReset.diff(now, ['hours', 'minutes', 'seconds']).toObject(),
 		);
 		setTimeTilGainsReset(
-			nextGainsReset.diff(now, ['hours', 'minutes', 'seconds']).toObject()
+			nextGainsReset.diff(now, ['hours', 'minutes', 'seconds']).toObject(),
 		);
 	};
 
@@ -51,18 +58,13 @@ export function Timers() {
 		return hours % 24;
 	};
 
-	if (!timer) {
-		setTimer(true);
-		setInterval(updateTime, 1000);
-	}
-
 	return (
 		<div className="container--vos p-py-2">
 			<div className="p-d-flex p-jc-between p-py-1">
 				<div>{dailyResetText}</div>
 				<div>
 					{`${formattedHours(timeTilReset.hours)}:${formattedMinutes(
-						timeTilReset.minutes
+						timeTilReset.minutes,
 					)}:${formattedSeconds(timeTilReset.seconds)}`}
 				</div>
 			</div>
@@ -70,7 +72,7 @@ export function Timers() {
 				<div>{gainsResetText}</div>
 				<div>
 					{`${formattedHours(timeTilGainsReset.hours)}:${formattedMinutes(
-						timeTilGainsReset.minutes
+						timeTilGainsReset.minutes,
 					)}:${formattedSeconds(timeTilGainsReset.seconds)}`}
 				</div>
 			</div>
