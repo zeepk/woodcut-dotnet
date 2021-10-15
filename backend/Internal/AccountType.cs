@@ -6,6 +6,7 @@
         Ironman,
         HardcoreIronman,
         DeadHardcoreIronman,
+        UltimateIronman,
         Deironed
     }
 }

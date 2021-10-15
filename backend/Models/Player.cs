@@ -16,6 +16,8 @@ namespace dotnet5_webapp.Models
         public string RecentStats { get; set; }
         public List<StatRecord> StatRecords { get; set; }
         public bool IsTracking { get; set; }
+        public bool OsrsIsTracking { get; set; }
         public AccountType IronmanStatus { get; set; }
+        public AccountType OsrsIronmanStatus { get; set; }
     }
 }

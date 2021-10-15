@@ -18,6 +18,7 @@ namespace dotnet5_webapp.Services
     {
         private readonly IConfiguration Configuration;
         private readonly IUserRepo _UserRepo;
+        
         static string hiscoreUrl = Constants.RunescapeApiBaseUrl;
         static string imHiscoreUrl = Constants.RunescapeImApiBaseUrl;
         static string hcimHiscoreUrl = Constants.RunescapeHcimApiBaseUrl;
