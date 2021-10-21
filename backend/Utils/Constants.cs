@@ -10,9 +10,16 @@ namespace dotnet5_webapp.Utils
         public const string dxpStartDateString = "2021/08/06";
         public const string dxpEndDateString = "2021/08/16";
 
-        public const string RunescapeApiBaseUrl = "https://secure.runescape.com/m=hiscore/index_lite.ws?player=";
-        public const string RunescapeImApiBaseUrl = "https://secure.runescape.com/m=hiscore_ironman/index_lite.ws?player=";
-        public const string RunescapeHcimApiBaseUrl = "https://secure.runescape.com/m=hiscore_hardcore_ironman/index_lite.ws?player=";
+        public const string RunescapeApiBaseUrlRs3 = "https://secure.runescape.com/m=hiscore/index_lite.ws?player=";
+        public const string RunescapeImApiBaseUrlRs3 = "https://secure.runescape.com/m=hiscore_ironman/index_lite.ws?player=";
+        public const string RunescapeHcimApiBaseUrlRs3 = "https://secure.runescape.com/m=hiscore_hardcore_ironman/index_lite.ws?player=";
+        
+        public const string RunescapeApiBaseUrlOsrs = "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws?player=";
+        public const string RunescapeImApiBaseUrlOsrs = "https://secure.runescape.com/m=hiscore_oldschool_ironman/index_lite.ws?player=";
+        public const string RunescapeHcimApiBaseUrlOsrs = "https://secure.runescape.com/m=hiscore_oldschool_hardcore_ironman/index_lite.ws?player=";
+        public const string RunescapeUimApiBaseUrlOsrs = "https://secure.runescape.com/m=hiscore_oldschool_ultimate/index_lite.ws?player=";
+        
+        
         public const string RunescapeApiPlayerDetailsUrlPre = "https://secure.runescape.com/m=website-data/playerDetails.ws?names=%5B%22";
         public const string RunescapeApiPlayerDetailsUrlPost = "%22%5D&callback=jQuery000000000000000_0000000000&_=0";
         public const string RunescapeApiPlayerMetricsUrlPre = "https://apps.runescape.com/runemetrics/profile/profile?user=";
@@ -26,7 +33,8 @@ namespace dotnet5_webapp.Utils
         public const string QuestStatusCompleted = "COMPLETED";
         public const string QuestStatusStarted = "STARTED";
         public const string QuestStatusNotStarted = "NOT_STARTED";
-        public const int TotalSkills = 28;
+        public const int TotalSkillsRs3 = 28 + 1;
+        public const int TotalSkillsOsrs = 23 + 1;
         public const long MaxXp = 5600000000;
         public const int MaxTotal = 2898;
         public readonly string[] SkillNames = {

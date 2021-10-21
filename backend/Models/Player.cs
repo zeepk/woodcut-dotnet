@@ -10,14 +10,13 @@ namespace dotnet5_webapp.Models
     {
         public int Id { get; set; }
         public string Username { get; set; }
+        public GameVersion GameVersion { get; set; }
         public string DisplayName { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime LastChecked { get; set; }
         public string RecentStats { get; set; }
         public List<StatRecord> StatRecords { get; set; }
         public bool IsTracking { get; set; }
-        public bool OsrsIsTracking { get; set; }
         public AccountType IronmanStatus { get; set; }
-        public AccountType OsrsIronmanStatus { get; set; }
     }
 }
