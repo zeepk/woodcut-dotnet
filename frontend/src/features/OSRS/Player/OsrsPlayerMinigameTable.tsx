@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import '../rs3.scss';
+import 'features/RS3/rs3.scss';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { useAppSelector } from '../../../app/hooks';
-import { selectMinigames } from 'features/RS3/rs3Slice';
-import { rs3DataArray } from 'utils/helperFunctions';
+import { useAppSelector } from 'app/hooks';
+import { selectMinigames } from 'features/OSRS/osrsSlice';
+import { osrsDataArray } from 'utils/helperFunctions';
 import { gainPeriods } from 'utils/constants';
-import { Minigame } from '../../../utils/customTypes';
+import { Minigame } from 'utils/customTypes';
 import { Dropdown } from 'primereact/dropdown';
 
 const nameTemplate = (rowData: Minigame) => (
-	<div>{rs3DataArray[rowData.minigameId]}</div>
+	<div>{osrsDataArray[rowData.minigameId]}</div>
 );
 const dayGainTemplate = (rowData: Minigame) => {
 	const gainClass = rowData.dayGain > 0 ? 'gain' : '';
 	return <div className={gainClass}>{rowData.dayGain.toLocaleString()}</div>;
 };
 
-export default function Rs3PlayerMinigameTable() {
+export default function OsrsPlayerMinigameTable() {
 	const [gainPeriod, setGainPeriod] = useState(gainPeriods[0]);
 	const minigames = useAppSelector(selectMinigames);
 

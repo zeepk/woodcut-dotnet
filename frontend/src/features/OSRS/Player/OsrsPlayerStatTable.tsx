@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import '../rs3.scss';
+import 'features/RS3/rs3.scss';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { useAppSelector } from '../../../app/hooks';
-import { selectSkills } from 'features/RS3/rs3Slice';
-import { skillIcon, skillNameArray } from 'utils/helperFunctions';
+import { useAppSelector } from 'app/hooks';
+import { selectSkills } from 'features/OSRS/osrsSlice';
+import { osrsSkillIcon, skillNameArray } from 'utils/helperFunctions';
 import { gainPeriods, isDxpOver } from 'utils/constants';
-import { Skill } from '../../../utils/customTypes';
+import { Skill } from 'utils/customTypes';
 import { Dropdown } from 'primereact/dropdown';
 
 const iconTemplate = (rowData: Skill) => {
-	const icon = skillIcon(rowData.skillId);
+	const icon = osrsSkillIcon(rowData.skillId);
 	return (
 		<span className="body--icon p-d-flex p-ai-center">
 			{icon}

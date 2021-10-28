@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import '../rs3.scss';
-import { Skill } from 'features/RS3/rs3Types';
+import { Skill } from 'utils/customTypes';
 import { Gain } from 'features/RS3/Dashboard/Gain';
 type props = {
 	gains: Array<Skill>;

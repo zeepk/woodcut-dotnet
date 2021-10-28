@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import '../rs3.scss';
-import { Rs3Activity } from 'features/RS3/rs3Types';
+import { Rs3Activity } from 'utils/customTypes';
 import { Activity } from 'features/RS3/Dashboard/Activity';
 import { noActivitiesFoundText } from 'utils/constants';
 type props = {

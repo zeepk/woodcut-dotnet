@@ -12,7 +12,7 @@ import {
 	unlikeActivity,
 	getIronStatus,
 } from './rs3Api';
-import { Skill, Minigame, Rs3Activity } from './rs3Types';
+import { Skill, Minigame, Rs3Activity } from '../../utils/customTypes';
 import {
 	questBadgeId,
 	rs3HomePageActivities,

@@ -28,6 +28,31 @@ import Divination from 'assets/skillIcons/27_divination.png';
 import Invention from 'assets/skillIcons/28_invention.png';
 import Archaeology from 'assets/skillIcons/29_archaeology.png';
 import QuestIcon from 'assets/images/questIcon.png';
+
+import OsrsAttack from 'assets/osrsSkillIcons/2_attack.png';
+import OsrsDefence from 'assets/osrsSkillIcons/3_defence.png';
+import OsrsStrength from 'assets/osrsSkillIcons/4_strength.png';
+import OsrsConstitution from 'assets/osrsSkillIcons/5_constitution.png';
+import OsrsRanged from 'assets/osrsSkillIcons/6_ranged.png';
+import OsrsPrayer from 'assets/osrsSkillIcons/7_prayer.png';
+import OsrsMagic from 'assets/osrsSkillIcons/8_magic.png';
+import OsrsCooking from 'assets/osrsSkillIcons/9_cooking.png';
+import OsrsWoodcutting from 'assets/osrsSkillIcons/10_woodcutting.png';
+import OsrsFletching from 'assets/osrsSkillIcons/11_fletching.png';
+import OsrsFishing from 'assets/osrsSkillIcons/12_fishing.png';
+import OsrsFiremaking from 'assets/osrsSkillIcons/13_firemaking.png';
+import OsrsCrafting from 'assets/osrsSkillIcons/14_crafting.png';
+import OsrsSmithing from 'assets/osrsSkillIcons/15_smithing.png';
+import OsrsMining from 'assets/osrsSkillIcons/16_mining.png';
+import OsrsHerblore from 'assets/osrsSkillIcons/17_herblore.png';
+import OsrsAgility from 'assets/osrsSkillIcons/18_agility.png';
+import OsrsThieving from 'assets/osrsSkillIcons/19_thieving.png';
+import OsrsSlayer from 'assets/osrsSkillIcons/20_slayer.png';
+import OsrsFarming from 'assets/osrsSkillIcons/21_farming.png';
+import OsrsRunecrafting from 'assets/osrsSkillIcons/22_runecrafting.png';
+import OsrsHunter from 'assets/osrsSkillIcons/23_hunter.png';
+import OsrsConstruction from 'assets/osrsSkillIcons/24_construction.png';
+
 import {
 	archJournal,
 	maxCapeXp,
@@ -39,7 +64,7 @@ import {
 	eliteSkill99Xp,
 	eliteSkill120Xp,
 } from 'utils/constants';
-import { Rs3Activity, Skill } from 'features/RS3/rs3Types';
+import { Rs3Activity, Skill } from 'utils/customTypes';
 
 export const isNullUndefinedOrWhitespace = (
 	text: string | null | undefined,
@@ -113,6 +138,33 @@ const imgArray = [
 	Archaeology,
 ];
 
+const osrsImgArray = [
+	Overall,
+	OsrsAttack,
+	OsrsDefence,
+	OsrsStrength,
+	OsrsConstitution,
+	OsrsRanged,
+	OsrsPrayer,
+	OsrsMagic,
+	OsrsCooking,
+	OsrsWoodcutting,
+	OsrsFletching,
+	OsrsFishing,
+	OsrsFiremaking,
+	OsrsCrafting,
+	OsrsSmithing,
+	OsrsMining,
+	OsrsHerblore,
+	OsrsAgility,
+	OsrsThieving,
+	OsrsSlayer,
+	OsrsFarming,
+	OsrsRunecrafting,
+	OsrsHunter,
+	OsrsConstruction,
+];
+
 export const skillNameArray = [
 	'Overall',
 	'Attack',
@@ -146,7 +198,11 @@ export const skillNameArray = [
 ];
 
 export const skillIcon = (id: number) => {
-	return <img src={imgArray[id]} alt="skill con" />;
+	return <img src={imgArray[id]} alt="skill icon" />;
+};
+
+export const osrsSkillIcon = (id: number) => {
+	return <img src={osrsImgArray[id]} alt="skill icon" />;
 };
 
 export const calcVirtualLevel = (rowData: {
@@ -267,6 +323,92 @@ export const rs3DataArray = [
 	'Clue Scrolls Hard',
 	'Clue Scrolls Elite',
 	'Clue Scrolls Master',
+];
+
+export const osrsDataArray = [
+	'Overall',
+	'Attack',
+	'Defence',
+	'Strength',
+	'Constitution',
+	'Ranged',
+	'Prayer',
+	'Magic',
+	'Cooking',
+	'Woodcutting',
+	'Fletching',
+	'Fishing',
+	'Firemaking',
+	'Crafting',
+	'Smithing',
+	'Mining',
+	'Herblore',
+	'Agility',
+	'Thieving',
+	'Slayer',
+	'Farming',
+	'Runecrafting',
+	'Hunter',
+	'Construction',
+	'League Points',
+	'Bounty Hunter - Hunter',
+	'Bounty Hunter - Rogue',
+	'Clue Scrolls (all)',
+	'Clue Scrolls (beginner)',
+	'Clue Scrolls (easy)',
+	'Clue Scrolls (medium)',
+	'Clue Scrolls (hard)',
+	'Clue Scrolls (elite)',
+	'Clue Scrolls (master)',
+	'LMS - Rank',
+	'Soul Wars Zeal',
+	'Abyssal Sire',
+	'Alchemical Hydra',
+	'Barrows Chests',
+	'Bryophyta',
+	'Callisto',
+	'Cerberus',
+	'Chambers of Xeric',
+	'Chambers of Xeric: Challenge Mode',
+	'Chaos Elemental',
+	'Chaos Fanatic',
+	'Commander Zilyana',
+	'Corporeal Beast',
+	'Crazy Archaeologist',
+	'Dagannoth Prime',
+	'Dagannoth Rex',
+	'Dagannoth Supreme',
+	'Deranged Archaeologist',
+	'General Graardor',
+	'Giant Mole',
+	'Grotesque Guardians',
+	'Hespori',
+	'Kalphite Queen',
+	'King Black Dragon',
+	'Kraken',
+	"Kree'Arra",
+	"K'ril Tsutsaroth",
+	'Mimic',
+	'Nightmare',
+	"Phosani's Nightmare",
+	'Obor',
+	'Sarachnis',
+	'Scorpia',
+	'Skotizo',
+	'Tempoross',
+	'The Gauntlet',
+	'The Corrupted Gauntlet',
+	'Theatre of Blood',
+	'Theatre of Blood: Hard Mode',
+	'Thermonuclear Smoke Devil',
+	'TzKal-Zuk',
+	'TzTok-Jad',
+	'Venenatis',
+	"Vet'ion",
+	'Vorkath',
+	'Wintertodt',
+	'Zalcano',
+	'Zulrah',
 ];
 
 export const calcSkillPercentage = (flag: string, data: Array<Skill>) => {

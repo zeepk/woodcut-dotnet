@@ -34,8 +34,9 @@ export function Navbar() {
 
 	const handleSearch = (e: any) => {
 		e.preventDefault();
+		const gameVersion = window.location.href.includes('rs3') ? 'rs3' : 'osrs';
 		if (value.toString().trim() !== '') {
-			history.push(`/rs3/user/${value.split(' ').join('+')}`);
+			history.push(`/${gameVersion}/user/${value.split(' ').join('+')}`);
 		}
 	};
 

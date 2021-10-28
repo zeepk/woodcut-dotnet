@@ -4,7 +4,7 @@ import { Column } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
 import 'features/RS3/rs3.scss';
 import { skillIcon } from 'utils/helperFunctions';
-import { Skill } from 'features/RS3/rs3Types';
+import { Skill } from 'utils/customTypes';
 import { comparisonGainPeriods, isDxpOver } from 'utils/constants';
 type props = {
 	player1Gains: Array<Skill>;

@@ -1,49 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import '../rs3.scss';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import 'features/RS3/rs3.scss';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
 import {
 	getXpGains,
-	getPlayerQuests,
-	getPlayerIronStatus,
-	getPlayerDetails,
-	getPlayerMetrics,
-	selectStatus,
 	selectPlayerSuccess,
-} from '../../RS3/rs3Slice';
+	selectStatus,
+} from 'features/OSRS/osrsSlice';
 import { TabMenu } from 'primereact/tabmenu';
-import Rs3PlayerStatTable from './Rs3PlayerStatTable';
-import Rs3PlayerMinigameTable from './Rs3PlayerMinigameTable';
-import PlayerDetails from 'features/RS3/Player/Details/PlayerDetails';
-import Rs3PlayerInfo from './Rs3PlayerInfo';
-import LoadingIcon from '../../Common/LoadingIcon';
+import LoadingIcon from 'features/Common/LoadingIcon';
 import { userNotFoundText } from 'utils/constants';
+import OsrsPlayerInfo from 'features/OSRS/Player/OsrsPlayerInfo';
+import OsrsPlayerStatTable from 'features/OSRS/Player/OsrsPlayerStatTable';
+import OsrsPlayerMinigameTable from 'features/OSRS/Player/OsrsPlayerMinigameTable';
 interface RouteParams {
 	username: string;
 }
 
-export default function Rs3PlayerLandingPage() {
+export default function OSrsPlayerLandingPage() {
 	const [tabIndex, updateTabIndex] = useState(0);
 	const dispatch = useAppDispatch();
 	const status = useAppSelector(selectStatus);
 	const playerSuccess = useAppSelector(selectPlayerSuccess);
 	const { username } = useParams<RouteParams>();
-	let activitiesLoaded = false;
 
 	const tabs = [
 		{ label: 'Stats', icon: 'tab--skills-icon' },
 		{ label: 'Minigames', icon: 'tab--quest-icon' },
-		{ label: 'Info', icon: 'pi pi-fw pi-home' },
 	];
 
 	useEffect(() => {
 		if (username.trim() !== '') {
 			const formattedUsername = username.split('+').join(' ');
 			dispatch(getXpGains(formattedUsername));
-			dispatch(getPlayerQuests(formattedUsername));
-			dispatch(getPlayerIronStatus(formattedUsername));
-			dispatch(getPlayerDetails(formattedUsername));
-			updateTabIndex(0);
 		}
 	}, [username, dispatch]);
 
@@ -58,32 +47,23 @@ export default function Rs3PlayerLandingPage() {
 	let content;
 	switch (tabIndex) {
 		case 0:
-			content = <Rs3PlayerStatTable />;
+			content = <OsrsPlayerStatTable />;
 			break;
 		case 1:
-			content = <Rs3PlayerMinigameTable />;
-			break;
-		case 2:
-			content = <PlayerDetails />;
+			content = <OsrsPlayerMinigameTable />;
 			break;
 		default:
 			break;
 	}
 
 	const updateTab = (index: number) => {
-		if (index === 0 && activitiesLoaded === false) {
-			activitiesLoaded = true;
-			const formattedUsername = username.split('+').join(' ');
-			dispatch(getPlayerMetrics(formattedUsername));
-		}
-
 		updateTabIndex(index);
 	};
 
 	return (
 		<div className="p-p-2 p-mt-4">
-			<div className="p-mb-6 p-mb-lg-0">
-				<Rs3PlayerInfo />
+			<div className="p-mb-4">
+				<OsrsPlayerInfo />
 			</div>
 			<TabMenu
 				model={tabs}

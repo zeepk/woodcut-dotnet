@@ -54,7 +54,7 @@ namespace dotnet5_webapp.Controllers
 
         // GET: api/Users/rs3/zee+pk
         // returns specific user and their records
-        [HttpGet("{gamemode}/{username}")]
+        [HttpGet("{gameVersion}/{username}")]
         public async Task<ActionResult<UserSearchResponse>> GetUser(GameVersion gameVersion, string username)
         {
             var response = await UserService.SearchForPlayer(username, gameVersion);
@@ -266,6 +266,7 @@ namespace dotnet5_webapp.Controllers
             return Ok(response);
         }
         
+        // TODO: get both rsn's from the same endpoint bc why not
         [HttpGet("rs3rsn")]
         [Authorize]
         public async Task<ActionResult<string>> TestAuth()

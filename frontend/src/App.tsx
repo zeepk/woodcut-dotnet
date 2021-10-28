@@ -11,6 +11,7 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import Rs3PlayerLandingPage from 'features/RS3/Player/Rs3PlayerLandingPage';
+import OsrsPlayerLandingPage from 'features/OSRS/Player/OsrsPlayerLandingPage';
 import Rs3PlayerComparison from 'features/RS3/Player/Compare/Rs3PlayerComparison';
 import Rs3PlayerComparisonHome from 'features/RS3/Player/Compare/Rs3PlayerComparisonHome';
 function initializeReactGA() {
@@ -30,6 +31,9 @@ function App() {
 					</Route>
 					<Route exact path="/rs3/user/:username">
 						<Rs3PlayerLandingPage />
+					</Route>
+					<Route exact path="/osrs/user/:username">
+						<OsrsPlayerLandingPage />
 					</Route>
 					<Route exact path="/rs3/compare">
 						<Rs3PlayerComparisonHome />

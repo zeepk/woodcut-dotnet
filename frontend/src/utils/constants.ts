@@ -17,17 +17,11 @@ export const isDxpOver = DateTime.now() > dxpEnd;
 // urls
 
 export const apiBaseUrl = process.env.REACT_APP_API_URL;
-export const gainsUrl = `${apiBaseUrl}/users/gains`;
 export const playerCountUrl = `${apiBaseUrl}/users/playercount`;
-export const startTrackingUrl = `${apiBaseUrl}/users/track`;
 export const questsUrl = `${apiBaseUrl}/users/quests`;
-export const ironStatusUrl = `${apiBaseUrl}/users/ironstatus`;
 export const detailsUrl = `${apiBaseUrl}/users/details`;
 export const metricsUrl = `${apiBaseUrl}/users/metrics`;
-export const userRsnUrl = `${apiBaseUrl}/users/rs3rsn`;
 export const activitiesUrl = `${apiBaseUrl}/users/activities`;
-export const followUrl = `${apiBaseUrl}/users/follow`;
-export const unfollowUrl = `${apiBaseUrl}/users/unfollow`;
 export const followedUrl = `${apiBaseUrl}/users/following`;
 export const likeUrl = `${apiBaseUrl}/users/like`;
 export const unlikeUrl = `${apiBaseUrl}/users/unlike`;
@@ -51,6 +45,24 @@ export const itemIconUrl =
 export const twitterUsername = '@matthughes2112';
 export const twitterUrl = `https://twitter.com/${twitterUsername}`;
 export const githubUrl = 'https://github.com/zeepk/woodcut';
+
+// rs3
+
+export const gainsUrl = `${apiBaseUrl}/users/gains/rs3`;
+export const startTrackingUrl = `${apiBaseUrl}/users/track/rs3`;
+export const followUrl = `${apiBaseUrl}/users/follow/rs3`;
+export const unfollowUrl = `${apiBaseUrl}/users/unfollow/rs3`;
+export const userRsnUrl = `${apiBaseUrl}/users/rsn/rs3`;
+export const ironStatusUrl = `${apiBaseUrl}/users/ironstatus/rs3`;
+
+// osrs
+
+export const osrsGainsUrl = `${apiBaseUrl}/users/gains/osrs`;
+export const osrsStartTrackingUrl = `${apiBaseUrl}/users/track/osrs`;
+export const osrsFollowUrl = `${apiBaseUrl}/users/follow/osrs`;
+export const osrsUfollowUrl = `${apiBaseUrl}/users/unfollow/osrs`;
+export const osrsUserRsnUrl = `${apiBaseUrl}/users/rsn/osrs`;
+export const osrsIronStatusUrl = `${apiBaseUrl}/users/ironstatus/osrs`;
 
 // icon urls
 export const archJournal =
@@ -81,6 +93,8 @@ export const loginFormErrorMessage =
 	'Email or Password is incorrect. Please try again.';
 export const homeContentTextPre =
 	'Site currently in beta. Start tracking your stats by searching for your player, and then find the Start Tracking button. Feel free to report any bugs/suggestions to';
+export const osrsHomeContentTextPre =
+	'The OSRS version of the site is currently under development. Limited features are available by searching for users via the search bar. Feel free to report any bugs/suggestions to';
 export const homeContentTextPost = 'on Twitter!';
 export const accountSettingsRs3RsnText = 'RS3 Name:';
 export const accountSettingsRs3RsnUpdatePlaceholder = 'New rsn';
@@ -190,13 +204,13 @@ export const navbarMenuItems = [
 		path: '/rs3',
 	},
 	{
-		text: 'Compare',
-		path: '/rs3/compare',
+		text: 'Old School',
+		path: '/osrs',
 	},
-	// {
-	// 	text: 'Old School',
-	// 	path: '/osrs',
-	// },
+	{
+		text: 'Compare',
+		path: `/rs3/compare`,
+	},
 ];
 
 export const questBadgeId = 5;

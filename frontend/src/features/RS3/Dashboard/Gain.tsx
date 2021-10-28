@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 
 import '../rs3.scss';
-import { Skill } from 'features/RS3/rs3Types';
+import { Skill } from 'utils/customTypes';
 import { skillIcon, skillNameArray } from 'utils/helperFunctions';
 type props = {
 	gain: Skill;
