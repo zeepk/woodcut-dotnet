@@ -39,7 +39,7 @@ import {
 	eliteSkill99Xp,
 	eliteSkill120Xp,
 } from 'utils/constants';
-import { Rs3Activity, Rs3Skill } from 'features/RS3/rs3Types';
+import { Rs3Activity, Skill } from 'features/RS3/rs3Types';
 
 export const isNullUndefinedOrWhitespace = (
 	text: string | null | undefined,
@@ -269,7 +269,7 @@ export const rs3DataArray = [
 	'Clue Scrolls Master',
 ];
 
-export const calcSkillPercentage = (flag: string, data: Array<Rs3Skill>) => {
+export const calcSkillPercentage = (flag: string, data: Array<Skill>) => {
 	const skillsAt120 = [
 		'Invention',
 		'Slayer',

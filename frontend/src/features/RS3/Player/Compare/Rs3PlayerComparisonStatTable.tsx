@@ -4,11 +4,11 @@ import { Column } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
 import 'features/RS3/rs3.scss';
 import { skillIcon } from 'utils/helperFunctions';
-import { Rs3Skill } from 'features/RS3/rs3Types';
+import { Skill } from 'features/RS3/rs3Types';
 import { comparisonGainPeriods, isDxpOver } from 'utils/constants';
 type props = {
-	player1Gains: Array<Rs3Skill>;
-	player2Gains: Array<Rs3Skill>;
+	player1Gains: Array<Skill>;
+	player2Gains: Array<Skill>;
 };
 
 export const Rs3PlayerComparisonStatTable: FunctionComponent<props> = ({
