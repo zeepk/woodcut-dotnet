@@ -301,6 +301,11 @@ export enum accountTypes {
 	DEIRON,
 }
 
+export enum gameVersions {
+	RS3,
+	OSRS,
+}
+
 export const footerLinks = [
 	{ id: 0, text: `v${versionNumber}`, class: 'version' },
 	{ id: 1, text: 'github code', link: githubUrl, class: 'code' },

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
-import { getStats } from './osrsApi';
+import { getStats, startTrackingUser } from './osrsApi';
 import { Skill, Minigame } from 'utils/customTypes';
 import { accountTypes } from 'utils/constants';
 
@@ -38,6 +38,17 @@ export const getXpGains = createAsyncThunk(
 	},
 );
 
+export const startTrackingForUserOsrs = createAsyncThunk(
+	'osrs/tracking',
+	async (args, { getState, requestId }) => {
+		// not using other params, but function won't work without them
+		const state: any = getState();
+		const username = state.osrs.player.username;
+		const response = await startTrackingUser(username);
+		return response;
+	},
+);
+
 const incrementPlayerLoading = (state: OsrsState) => {
 	state.player.playerLoading = state.player.playerLoading + 1;
 };
@@ -66,6 +77,9 @@ export const osrsSlice = createSlice({
 					state.player.username = action.payload.data.data.displayName;
 					state.player.isTracking = action.payload.data.data.isTracking;
 				}
+			})
+			.addCase(startTrackingForUserOsrs.fulfilled, (state, action) => {
+				state.player.isTracking = action.payload.data.data;
 			});
 	},
 });
@@ -81,5 +95,9 @@ export const selectTotalXp = (state: RootState) =>
 	state.osrs.player.skills?.length > 0 ? state.osrs.player.skills[0].xp : 0;
 export const selectStatus = (state: RootState) => state.osrs.status;
 export const selectUsername = (state: RootState) => state.osrs.player.username;
+export const selectOsrsIsTracking = (state: RootState) =>
+	state.osrs.player.isTracking;
+export const selectOsrsUsername = (state: RootState) =>
+	state.osrs.player.username;
 
 export default osrsSlice.reducer;

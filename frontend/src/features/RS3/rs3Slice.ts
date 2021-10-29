@@ -171,7 +171,7 @@ export const getPlayerMetrics = createAsyncThunk(
 
 export const startTrackingForUser = createAsyncThunk(
 	'rs3/tracking',
-	async (arg, { getState, requestId }) => {
+	async (args, { getState, requestId }) => {
 		// not using other params, but function won't work without them
 		const state: any = getState();
 		const username = state.rs3.player.username;
