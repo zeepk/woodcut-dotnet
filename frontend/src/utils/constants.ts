@@ -4,7 +4,7 @@ import QuestIcon from 'assets/images/questIcon.png';
 import { DateTime } from 'luxon';
 
 // version
-export const versionNumber = '1.0.0';
+export const versionNumber = '1.1.0';
 export const dxpStart = DateTime.fromJSDate(
 	new Date('17 October 1999 12:00 UTC'),
 );
