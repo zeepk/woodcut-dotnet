@@ -267,7 +267,7 @@ namespace dotnet5_webapp.Controllers
         }
         
         // TODO: get both rsn's from the same endpoint bc why not
-        [HttpGet("rs3rsn")]
+        [HttpGet("rsn/{gameVersion}")]
         [Authorize]
         public async Task<ActionResult<string>> TestAuth()
         {
