@@ -18,9 +18,10 @@ namespace dotnet5_webapp.Repos
         private readonly DataContext Context;
         public UserRepo(DataContext context) => Context = context;
 
-        public async Task<Player> GetPlayerByUsername(string username)
+        public async Task<Player> GetPlayerWithRecordsByUsername(string username, GameVersion gameVersion)
         {
-            var user = await Context.User.Where(u => u.Username == username)
+            var user = await Context.User 
+                .Where(u => u.Username == username && u.GameVersion == gameVersion)
                 .Include(u => u.StatRecords)
                 .ThenInclude(r => r.Skills.OrderBy(s => s.SkillId))
                 .Include(u => u.StatRecords)
@@ -28,10 +29,10 @@ namespace dotnet5_webapp.Repos
                 .AsSplitQuery()
                 .FirstOrDefaultAsync();
             return user;
-        }    
-        public async Task<Player> GetPlayerByUsernameLite(string username)
+        }
+        public async Task<Player> GetPlayerByUsernameLite(string username, GameVersion gameVersion)
         {
-            var user = await Context.User.Where(u => u.Username == username)
+            var user = await Context.User.Where(u => u.Username == username && u.GameVersion == gameVersion)
                 .FirstOrDefaultAsync();
             return user;
         }  
@@ -125,9 +126,16 @@ namespace dotnet5_webapp.Repos
             await Context.SaveChangesAsync();
             return player;
         }             
-        public async Task<bool> UpdateRs3Rsn(string username, ApplicationUser user)
+        public async Task<bool> UpdateRsn(string username, ApplicationUser user, GameVersion gameVersion)
         {
-            user.Rs3Rsn = username;
+            if (gameVersion == GameVersion.RS3)
+            {
+                user.Rs3Rsn = username;
+            }
+            if (gameVersion == GameVersion.OSRS)
+            {
+                user.OsrsRsn = username;
+            }
             await Context.SaveChangesAsync();
             return true;
         }        

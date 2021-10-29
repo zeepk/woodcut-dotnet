@@ -18,6 +18,7 @@ import { AuthButton } from 'features/Common/Account/AuthButton';
 import { navbarMenuItems } from 'utils/constants';
 import Logo from '../../assets/images/logo.png';
 import 'features/Common/common.scss';
+import { DxpTimer } from './DxpTimer';
 
 export function Navbar() {
 	const history = useHistory();
@@ -33,8 +34,9 @@ export function Navbar() {
 
 	const handleSearch = (e: any) => {
 		e.preventDefault();
+		const gameVersion = window.location.href.includes('rs3') ? 'rs3' : 'osrs';
 		if (value.toString().trim() !== '') {
-			history.push(`/rs3/user/${value.split(' ').join('+')}`);
+			history.push(`/${gameVersion}/user/${value.split(' ').join('+')}`);
 		}
 	};
 
@@ -58,6 +60,10 @@ export function Navbar() {
 
 	const navbarItems = [
 		...navbarMenuItemComponents,
+		{
+			template: () => <DxpTimer />,
+			className: 'container--dxp',
+		},
 		{
 			template: () => (
 				<form

@@ -12,7 +12,7 @@ import {
 	unlikeActivity,
 	getIronStatus,
 } from './rs3Api';
-import { Rs3Skill, Rs3Minigame, Rs3Activity } from './rs3Types';
+import { Skill, Minigame, Rs3Activity } from '../../utils/customTypes';
 import {
 	questBadgeId,
 	rs3HomePageActivities,
@@ -32,8 +32,8 @@ export interface Rs3State {
 			questPoints: number;
 			totalQuestPoints: number;
 		};
-		skills: Array<Rs3Skill>;
-		minigames: Array<Rs3Minigame>;
+		skills: Array<Skill>;
+		minigames: Array<Minigame>;
 		badges: Array<number>;
 		activities: Array<Rs3Activity>;
 		runemetricsEnabled: boolean;
@@ -42,15 +42,15 @@ export interface Rs3State {
 	};
 	compare: {
 		player1: {
-			skills: Array<Rs3Skill>;
-			minigames: Array<Rs3Minigame>;
+			skills: Array<Skill>;
+			minigames: Array<Minigame>;
 			playerLoading: boolean;
 			ironmanStatus: accountTypes;
 			success: boolean;
 		};
 		player2: {
-			skills: Array<Rs3Skill>;
-			minigames: Array<Rs3Minigame>;
+			skills: Array<Skill>;
+			minigames: Array<Minigame>;
 			playerLoading: boolean;
 			ironmanStatus: accountTypes;
 			success: boolean;

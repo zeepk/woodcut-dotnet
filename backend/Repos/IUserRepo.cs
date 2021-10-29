@@ -9,8 +9,8 @@ namespace dotnet5_webapp.Repos
 {
     public interface IUserRepo
     {
-        Task<Player> GetPlayerByUsername(string username);
-        Task<Player> GetPlayerByUsernameLite(string username);
+        Task<Player> GetPlayerWithRecordsByUsername(string username, GameVersion gameVersion);
+        Task<Player> GetPlayerByUsernameLite(string username, GameVersion gameVersion);
         Task<ApplicationUser> GetUserByUsername(string username);
         Task<Player> GetShallowUserByUsername(string username);
         Task<Player> UpdatePlayerIronStatus(Player player, AccountType accountType);
@@ -20,7 +20,7 @@ namespace dotnet5_webapp.Repos
         Task<Player> SaveChanges(Player player);
         Task<Player> StartTrackingUser(Player player);
         Task<Player> FollowPlayer(Follow follow, ApplicationUser user);
-        Task<bool> UpdateRs3Rsn(string username, ApplicationUser user);
+        Task<bool> UpdateRsn(string username, ApplicationUser user, GameVersion gameVersion);
         Task<Player> UnfollowPlayer(Player player, ApplicationUser user);
         Task<ICollection<String>> GetFollowedPlayerNames(ApplicationUser user);
         Task<ICollection<String>> GetPlayerNames();

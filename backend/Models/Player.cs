@@ -10,6 +10,7 @@ namespace dotnet5_webapp.Models
     {
         public int Id { get; set; }
         public string Username { get; set; }
+        public GameVersion GameVersion { get; set; }
         public string DisplayName { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime LastChecked { get; set; }

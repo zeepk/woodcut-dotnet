@@ -4,18 +4,18 @@ import { Column } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
 import 'features/RS3/rs3.scss';
 import { skillIcon } from 'utils/helperFunctions';
-import { Rs3Skill } from 'features/RS3/rs3Types';
-import { comparisonGainPeriods, isDxpActive } from 'utils/constants';
+import { Skill } from 'utils/customTypes';
+import { comparisonGainPeriods, isDxpOver } from 'utils/constants';
 type props = {
-	player1Gains: Array<Rs3Skill>;
-	player2Gains: Array<Rs3Skill>;
+	player1Gains: Array<Skill>;
+	player2Gains: Array<Skill>;
 };
 
 export const Rs3PlayerComparisonStatTable: FunctionComponent<props> = ({
 	player1Gains,
 	player2Gains,
 }) => {
-	const defaultIndex = isDxpActive ? comparisonGainPeriods.length - 1 : 0;
+	const defaultIndex = !isDxpOver ? comparisonGainPeriods.length - 1 : 0;
 	const [gainPeriod, setGainPeriod] = useState(
 		comparisonGainPeriods[defaultIndex],
 	);

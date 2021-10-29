@@ -52,12 +52,12 @@ namespace dotnet5_webapp.Controllers
             return await _context.User.ToListAsync();
         }
 
-        // GET: api/Users/zee+pk
+        // GET: api/Users/rs3/zee+pk
         // returns specific user and their records
-        [HttpGet("{username}")]
-        public async Task<ActionResult<UserSearchResponse>> GetUser(string username)
+        [HttpGet("{gameVersion}/{username}")]
+        public async Task<ActionResult<UserSearchResponse>> GetUser(GameVersion gameVersion, string username)
         {
-            var response = await UserService.SearchForPlayer(username);
+            var response = await UserService.SearchForPlayer(username, gameVersion);
             return Ok(response);
         }
 
@@ -81,20 +81,20 @@ namespace dotnet5_webapp.Controllers
 
         // PUT: api/Users/update/zee+pk
         // add a new record to the specified user
-        [HttpPost("update/{username}")]
-        public async Task<ActionResult<Player>> UpdateUser(string username)
+        [HttpPost("update/{gameVersion}/{username}")]
+        public async Task<ActionResult<Player>> UpdateUser(GameVersion gameVersion, string username)
         {
             var users = _context.User.Include(u => u.StatRecords);
-            var user = await users.FirstOrDefaultAsync(user => user.Username == username);
-            if (user == null)
+            var player = await users.FirstOrDefaultAsync(user => user.Username == username && user.GameVersion == gameVersion);
+            if (player == null)
             {
                 return NotFound();
             }
-            await UserService.CreateStatRecord(user);
+            await UserService.CreateStatRecord(player);
             await _context.SaveChangesAsync();
 
 
-            return Ok(user);
+            return Ok(player);
 
         }
 
@@ -174,12 +174,12 @@ namespace dotnet5_webapp.Controllers
             return Ok(vos);
         }
         
-        // GET: api/Users/gains/zee+pk
+        // GET: api/Users/gains/rs3/zee+pk
         // returns specific user and their records
-        [HttpGet("gains/{username}")]
-        public async Task<ActionResult<ResponseWrapper<CurrentGainForUserServiceResponse>>> GetGainsForUser(string username)
+        [HttpGet("gains/{gameVersion}/{username}")]
+        public async Task<ActionResult<ResponseWrapper<CurrentGainForUserServiceResponse>>> GetGainsForUser(GameVersion gameVersion, string username)
         {
-            var response = await UserService.CurrentGainForUser(username);
+            var response = await UserService.CurrentGainForUser(username, gameVersion);
             return Ok(response);
         }
 
@@ -211,10 +211,10 @@ namespace dotnet5_webapp.Controllers
             return Ok(response);
         }   
         
-        [HttpPut("track/{username}")]
-        public async Task<ActionResult<ResponseWrapper<Boolean>>> TrackUser(String username)
+        [HttpPut("track/{gameVersion}/{username}")]
+        public async Task<ActionResult<ResponseWrapper<Boolean>>> TrackUser(GameVersion gameVersion, String username)
         {
-            var response = await UserService.TrackUser(username);
+            var response = await UserService.TrackUser(username, gameVersion);
             return Ok(response);
         }
         
@@ -244,28 +244,29 @@ namespace dotnet5_webapp.Controllers
             return Ok(response);
         }
 
-        [HttpPut("follow/{username}")]
+        [HttpPut("follow/{gameVersion}/{username}")]
         [Authorize]
-        public async Task<ActionResult<ResponseWrapper<String>>> FollowPlayer(String username)
+        public async Task<ActionResult<ResponseWrapper<String>>> FollowPlayer(GameVersion gameVersion, String username)
         {
             var user = User.Claims.Where(x => x.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
             var applicationUser = await UserService.SearchForUser(user);
 
-            var response = await UserService.FollowPlayer(username, applicationUser);
+            var response = await UserService.FollowPlayer(username, applicationUser, gameVersion);
             return Ok(response);
         }        
         
-        [HttpPut("unfollow/{username}")]
+        [HttpPut("unfollow/{gameVersion}/{username}")]
         [Authorize]
-        public async Task<ActionResult<ResponseWrapper<String>>> UnfollowPlayer(String username)
+        public async Task<ActionResult<ResponseWrapper<String>>> UnfollowPlayer(GameVersion gameVersion, String username)
         {
             var user = User.Claims.Where(x => x.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
             var applicationUser = await UserService.SearchForUser(user);
 
-            var response = await UserService.UnfollowPlayer(username, applicationUser);
+            var response = await UserService.UnfollowPlayer(username, applicationUser, gameVersion);
             return Ok(response);
         }
         
+        // TODO: get both rsn's from the same endpoint bc why not
         [HttpGet("rs3rsn")]
         [Authorize]
         public async Task<ActionResult<string>> TestAuth()
@@ -282,14 +283,14 @@ namespace dotnet5_webapp.Controllers
         
         // user rsn
         
-        [HttpPut("rs3rsn/{username}")]
+        [HttpPut("rsn/{gameVersion}/{username}")]
         [Authorize]
-        public async Task<ActionResult<ResponseWrapper<string>>> UpdateRs3Rsn(String username)
+        public async Task<ActionResult<ResponseWrapper<string>>> UpdateRs3Rsn(GameVersion gameVersion, String username)
         {
             var user = User.Claims.Where(x => x.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
             var applicationUser = await UserService.SearchForUser(user);
 
-            var response = await UserService.UpdateRs3Rsn(username, applicationUser);
+            var response = await UserService.UpdateRsn(username, applicationUser, gameVersion);
             return Ok(response);
         } 
         
@@ -315,16 +316,16 @@ namespace dotnet5_webapp.Controllers
             return Ok(response);
         }   
         
-        [HttpPut("ironstatus/{username}")]
-        public async Task<ActionResult<ResponseWrapper<Player>>> UpdateAccountStatus(string username)
+        [HttpPut("ironstatus/{gameVersion}/{username}")]
+        public async Task<ActionResult<ResponseWrapper<Player>>> UpdateAccountStatus(GameVersion gameVersion, string username)
         {
-            var response = await UserService.UpdateIronStatus(username);
+            var response = await UserService.UpdateIronStatus(username, gameVersion);
             return Ok(response);
         }           
-        [HttpGet("ironstatus/{username}")]
-        public async Task<ActionResult<ResponseWrapper<AccountType>>> GetIronStatus(String username)
+        [HttpGet("ironstatus/{gameVersion}/{username}")]
+        public async Task<ActionResult<ResponseWrapper<AccountType>>> GetIronStatus(GameVersion gameVersion, String username)
         {
-            var response = await UserService.GetIronStatus(username);
+            var response = await UserService.GetIronStatus(username, gameVersion);
             return Ok(response);
         }           
         [HttpPost("seedclanmembers/{clan}")]

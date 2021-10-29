@@ -23,7 +23,7 @@ interface RouteParams {
 }
 
 export default function Rs3PlayerLandingPage() {
-	const [tabIndex, updateTabIndex] = useState(1);
+	const [tabIndex, updateTabIndex] = useState(0);
 	const dispatch = useAppDispatch();
 	const status = useAppSelector(selectStatus);
 	const playerSuccess = useAppSelector(selectPlayerSuccess);
@@ -31,9 +31,9 @@ export default function Rs3PlayerLandingPage() {
 	let activitiesLoaded = false;
 
 	const tabs = [
-		{ label: 'Info', icon: 'pi pi-fw pi-home' },
 		{ label: 'Stats', icon: 'tab--skills-icon' },
 		{ label: 'Minigames', icon: 'tab--quest-icon' },
+		{ label: 'Info', icon: 'pi pi-fw pi-home' },
 	];
 
 	useEffect(() => {
@@ -43,7 +43,7 @@ export default function Rs3PlayerLandingPage() {
 			dispatch(getPlayerQuests(formattedUsername));
 			dispatch(getPlayerIronStatus(formattedUsername));
 			dispatch(getPlayerDetails(formattedUsername));
-			updateTabIndex(1);
+			updateTabIndex(0);
 		}
 	}, [username, dispatch]);
 
@@ -58,13 +58,13 @@ export default function Rs3PlayerLandingPage() {
 	let content;
 	switch (tabIndex) {
 		case 0:
-			content = <PlayerDetails />;
-			break;
-		case 1:
 			content = <Rs3PlayerStatTable />;
 			break;
-		case 2:
+		case 1:
 			content = <Rs3PlayerMinigameTable />;
+			break;
+		case 2:
+			content = <PlayerDetails />;
 			break;
 		default:
 			break;

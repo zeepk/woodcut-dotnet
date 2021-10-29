@@ -18,12 +18,9 @@ namespace dotnet5_webapp.Services
     {
         private readonly IConfiguration Configuration;
         private readonly IUserRepo _UserRepo;
-        static string hiscoreUrl = Constants.RunescapeApiBaseUrl;
-        static string imHiscoreUrl = Constants.RunescapeImApiBaseUrl;
-        static string hcimHiscoreUrl = Constants.RunescapeHcimApiBaseUrl;
+
         static string playerCountUrl = Constants.RunescapeApiPlayerCount;
         static string clanMemberListUrl = Constants.RunescapeApiClanMemberListUrl;
-        static int totalSkills = Constants.TotalSkills + 1;
 
         public UserService(IUserRepo userRepo, IConfiguration configuration)
         {
@@ -91,7 +88,10 @@ namespace dotnet5_webapp.Services
             if ((DateTime.Now - user.LastChecked).TotalSeconds > 60)
             {
                 Console.WriteLine("Making official API call");
-                apiData = await OfficialApiCall(hiscoreUrl + user.Username);
+                var apiUrl = user.GameVersion == GameVersion.RS3
+                    ? Constants.RunescapeApiBaseUrlRs3
+                    : Constants.RunescapeApiBaseUrlOsrs;
+                apiData = await OfficialApiCall(apiUrl + user.Username);
                 Console.WriteLine("Done making official API call");
                 user = await _UserRepo.UpdatePlayerLastChecked(user, apiData);
             }
@@ -100,6 +100,7 @@ namespace dotnet5_webapp.Services
                 apiData = user.RecentStats;
             }
             
+            var skillCount = user.GameVersion == GameVersion.RS3 ? Constants.TotalSkillsRs3 : Constants.TotalSkillsOsrs;
             List<Skill> skills = new List<Skill>();
             List<Minigame> minigames = new List<Minigame>();
             if (apiData == null)
@@ -108,7 +109,7 @@ namespace dotnet5_webapp.Services
             }
             string[] lines = apiData.Split('\n');
             // looping through the skills and adding them
-            for (int i = 0; i < totalSkills; i++)
+            for (int i = 0; i < skillCount; i++)
             {
                 String[] stat = lines[i].Split(',');
                 Skill skill = new Skill()
@@ -127,7 +128,7 @@ namespace dotnet5_webapp.Services
             }
 
             // looping through the minigames and adding them
-            for (int i = totalSkills; i < lines.Length - 1; i++)
+            for (int i = skillCount; i < lines.Length - 1; i++)
             {
                 String[] stat = lines[i].Split(',');
                 Minigame minigame = new Minigame()
@@ -197,7 +198,7 @@ namespace dotnet5_webapp.Services
                 Data = data
             };
         }            
-        public async Task<ResponseWrapper<Player>> UpdateIronStatus(String username)
+        public async Task<ResponseWrapper<Player>> UpdateIronStatus(String username, GameVersion gameVersion)
         {
             var response = new ResponseWrapper<Player>
             {
@@ -205,20 +206,20 @@ namespace dotnet5_webapp.Services
                 Data = null
             };
             
-            var player = await _UserRepo.GetPlayerByUsernameLite(username);
+            var player = await _UserRepo.GetPlayerByUsernameLite(username, gameVersion);
             if (player == null)
             {
                 response.Status = $"User {username} not found in the Official API details table";
                 return response;
             }
             
-            var accountStatus = await GetAccountStatus(username);
+            var accountStatus = await GetAccountStatus(username, gameVersion);
             player = await _UserRepo.UpdatePlayerIronStatus(player, accountStatus);
             
             response.Data = player;
             return response;
         }          
-        public async Task<ResponseWrapper<AccountType>> GetIronStatus(String username)
+        public async Task<ResponseWrapper<AccountType>> GetIronStatus(String username, GameVersion gameVersion)
         {
             var response = new ResponseWrapper<AccountType>
             {
@@ -226,7 +227,7 @@ namespace dotnet5_webapp.Services
                 Data = AccountType.Main
             };
             
-            var player = await _UserRepo.GetPlayerByUsernameLite(username);
+            var player = await _UserRepo.GetPlayerByUsernameLite(username, gameVersion);
             if (player == null)
             {
                 response.Status = $"User {username} not found.";
@@ -389,7 +390,10 @@ namespace dotnet5_webapp.Services
         {
             List<Skill> skills = new List<Skill>();
             List<Minigame> minigames = new List<Minigame>();
-            var apiData = await OfficialApiCall(hiscoreUrl + player.Username);
+            var officialApiUrl = player.GameVersion == GameVersion.RS3 ? Constants.RunescapeApiBaseUrlRs3 : Constants.RunescapeApiBaseUrlOsrs;
+            var skillCount = player.GameVersion == GameVersion.RS3 ? Constants.TotalSkillsRs3 : Constants.TotalSkillsOsrs;
+            
+            var apiData = await OfficialApiCall(officialApiUrl + player.Username);
             if (apiData == null)
             {
                 return;
@@ -405,7 +409,7 @@ namespace dotnet5_webapp.Services
             };
 
             // looping through the skills and adding them
-            for (var i = 0; i < totalSkills; i++)
+            for (var i = 0; i < skillCount; i++)
             {
                 String[] stat = lines[i].Split(',');
                 Skill skill = new Skill()
@@ -422,7 +426,7 @@ namespace dotnet5_webapp.Services
             }
 
             // looping through the minigames and adding them
-            for (var i = totalSkills; i < lines.Length - 1; i++)
+            for (var i = skillCount; i < lines.Length - 1; i++)
             {
                 String[] stat = lines[i].Split(',');
                 Minigame minigame = new Minigame()
@@ -442,15 +446,13 @@ namespace dotnet5_webapp.Services
             player.StatRecords.Add(newStatRecord);
         }
         
-        
-
-        public async Task<UserSearchResponse> SearchForPlayer(String username)
+        public async Task<UserSearchResponse> SearchForPlayer(String username, GameVersion gameVersion)
         {
             var response = new UserSearchResponse();
-            var user = await _UserRepo.GetPlayerByUsername(username);
+            var user = await _UserRepo.GetPlayerWithRecordsByUsername(username, gameVersion);
             if (user == null)
             {
-                user = await CreateNewUser(username);
+                user = await CreateNewPlayer(username, gameVersion);
                 response.WasCreated = user != null;
             }
             else
@@ -458,6 +460,7 @@ namespace dotnet5_webapp.Services
                 response.WasCreated = false;
             }
             response.User = user;
+            
             return response;
         }
         public async Task<ApplicationUser> SearchForUser(String username)
@@ -491,16 +494,20 @@ namespace dotnet5_webapp.Services
             return updatedActivities;
         }
 
-        public async Task<Player> CreateNewUser(String username)
+        public async Task<Player> CreateNewPlayer(String username, GameVersion gameVersion)
         {
             // creating new user
+            var accountType = await GetAccountStatus(username, gameVersion);
+            
             Player newPlayer = new Player()
             {
                 DateCreated = DateTime.Now,
                 Username = username,
                 DisplayName = username.Replace('+', ' '),
                 StatRecords = new List<StatRecord>(),
-                IsTracking = false
+                IsTracking = false,
+                GameVersion = gameVersion,
+                IronmanStatus = accountType
             };
             
             // if the user is not found in the Official API, this will error out
@@ -515,15 +522,11 @@ namespace dotnet5_webapp.Services
                 return null;
             }
 
-            var accountType = await GetAccountStatus(username);
-
-            newPlayer.IronmanStatus = accountType;
-            
             var user = await _UserRepo.CreateUser(newPlayer);
             return user;
         }
 
-        public async Task<ResponseWrapper<Boolean>> TrackUser(String username)
+        public async Task<ResponseWrapper<Boolean>> TrackUser(String username, GameVersion gameVersion)
         {
             var response = new ResponseWrapper<Boolean>
             {
@@ -531,7 +534,7 @@ namespace dotnet5_webapp.Services
                 Status = ""
             };
             
-            var user = await _UserRepo.GetPlayerByUsernameLite(username);
+            var user = await _UserRepo.GetPlayerByUsernameLite(username, gameVersion);
             if (user == null)
             {
                 response.Success = false;
@@ -544,7 +547,7 @@ namespace dotnet5_webapp.Services
             return response;
         }
 
-        public async Task<ResponseWrapper<CurrentGainForUserServiceResponse>> CurrentGainForUser(String username)
+        public async Task<ResponseWrapper<CurrentGainForUserServiceResponse>> CurrentGainForUser(String username, GameVersion gameVersion)
         {
             var response = new ResponseWrapper<CurrentGainForUserServiceResponse>
             {
@@ -553,11 +556,11 @@ namespace dotnet5_webapp.Services
                 Data = new CurrentGainForUserServiceResponse()
             };
             
-            var user = await _UserRepo.GetPlayerByUsernameLite(username);
+            var user = await _UserRepo.GetPlayerByUsernameLite(username, gameVersion);
             if (user == null)
             {
                 // create use if does not exist
-                user = await CreateNewUser(username);
+                user = await CreateNewPlayer(username, gameVersion);
                 if (user == null)
                 {
                     //if still null, means nobody exists with that username and we just return null for now
@@ -574,6 +577,7 @@ namespace dotnet5_webapp.Services
             var skillGains = new List<SkillGain>();
             var minigameGains = new List<MinigameGain>();
             var badges = new List<Constants.BadgeType>();
+            var skillCount = user.GameVersion == GameVersion.RS3 ? Constants.TotalSkillsRs3 : Constants.TotalSkillsOsrs;
             
             // get current stats to show and compare to records
             var (currentSkills, currentMinigames) = await GetCurrentStats(user);
@@ -601,7 +605,7 @@ namespace dotnet5_webapp.Services
             var validTracking = user.IsTracking && dayRecord != null;
 
             // calculate gainz
-            for (var i = 0; i < totalSkills; i++)
+            for (var i = 0; i < skillCount; i++)
             {
                 var skillGain = new SkillGain();
                 
@@ -653,7 +657,7 @@ namespace dotnet5_webapp.Services
                 }
                 skillGains.Add(skillGain);
             }
-            for (var i = 0; i < currentMinigames.Count - 1; i++)
+            for (var i = 0; i < currentMinigames.Count; i++)
             {
                 var minigameGain = new MinigameGain();
                 
@@ -751,7 +755,7 @@ namespace dotnet5_webapp.Services
             response.Data = activityResponses.ToList();
             return response;
         }         
-        public async Task<ResponseWrapper<String>> FollowPlayer(String username, ApplicationUser user)
+        public async Task<ResponseWrapper<String>> FollowPlayer(String username, ApplicationUser user, GameVersion gameVersion)
         {
             var response = new ResponseWrapper<String>
             {
@@ -759,7 +763,7 @@ namespace dotnet5_webapp.Services
                 Status = "", Data = username
             };
             
-            var player = await _UserRepo.GetPlayerByUsername(username);
+            var player = await _UserRepo.GetPlayerWithRecordsByUsername(username, gameVersion);
             if (player == null)
             {
                 response.Success = false;
@@ -845,7 +849,7 @@ namespace dotnet5_webapp.Services
 
             return response;
         } 
-        public async Task<ResponseWrapper<String>> UnfollowPlayer(String username, ApplicationUser user)
+        public async Task<ResponseWrapper<String>> UnfollowPlayer(String username, ApplicationUser user, GameVersion gameVersion)
         {
             var response = new ResponseWrapper<String>
             {
@@ -854,7 +858,7 @@ namespace dotnet5_webapp.Services
                 Data = username
             };
             
-            var player = await _UserRepo.GetPlayerByUsername(username);
+            var player = await _UserRepo.GetPlayerWithRecordsByUsername(username, gameVersion);
             if (player == null)
             {
                 response.Success = false;
@@ -872,7 +876,7 @@ namespace dotnet5_webapp.Services
             
             return response;
         }        
-        public async Task<ResponseWrapper<string>> UpdateRs3Rsn(String username, ApplicationUser user)
+        public async Task<ResponseWrapper<string>> UpdateRsn(String username, ApplicationUser user, GameVersion gameVersion)
         {
             var response = new ResponseWrapper<string>
             {
@@ -880,7 +884,7 @@ namespace dotnet5_webapp.Services
                 Status = ""
             };
             
-            var player = await _UserRepo.GetPlayerByUsername(username);
+            var player = await _UserRepo.GetPlayerWithRecordsByUsername(username, gameVersion);
             if (player == null)
             {
                 response.Success = false;
@@ -888,7 +892,7 @@ namespace dotnet5_webapp.Services
                 return response;
             }
             
-            var updatedPlayer = await _UserRepo.UpdateRs3Rsn(username, user);
+            var updatedPlayer = await _UserRepo.UpdateRsn(username, user, gameVersion);
             if (updatedPlayer == false)
             {
                 response.Success = false;
@@ -930,7 +934,7 @@ namespace dotnet5_webapp.Services
             
             foreach (var p in playersToAdd)
             {
-                var user = await CreateNewUser(p);
+                var user = await CreateNewPlayer(p, GameVersion.RS3);
                 if (user != null)
                 {
                     createdPlayers.Add(user.Username);
@@ -944,13 +948,25 @@ namespace dotnet5_webapp.Services
                 return response;
         }
 
-        public async Task<AccountType> GetAccountStatus(String username)
+        public async Task<AccountType> GetAccountStatus(String username, GameVersion gameVersion)
         {
+            var isRs3 = gameVersion == GameVersion.RS3;
+            var hcimUrl = isRs3 ? Constants.RunescapeHcimApiBaseUrlRs3 : Constants.RunescapeHcimApiBaseUrlOsrs;
+            var imUrl = isRs3 ? Constants.RunescapeImApiBaseUrlRs3 : Constants.RunescapeImApiBaseUrlOsrs;
+            var uimUrl = Constants.RunescapeUimApiBaseUrlOsrs;
             try
             {
-                var hcimData = await OfficialApiCall(hcimHiscoreUrl + username);
-                var imData = await OfficialApiCall(imHiscoreUrl + username);
+                var hcimData = await OfficialApiCall(hcimUrl + username);
+                var imData = await OfficialApiCall(imUrl + username);
                 
+                //      +----------------+-------------+---------------+--------------+
+                //      |  Account Type  | IM Hiscores | HCIM Hiscores | UIM Hiscores |
+                //      +----------------+-------------+---------------+--------------+
+                //      | IM             | yes         | no            | no           |
+                //      | HCIM           | yes         | yes           | no           |
+                //      | UIM            | yes         | no            | yes          |
+                //      +----------------+-------------+---------------+--------------+
+
                 if (imData == null)
                 {
                     // if iron data null, means they are main since they would otherwise have hiscore data
@@ -959,6 +975,17 @@ namespace dotnet5_webapp.Services
                 if (hcimData == null)
                 {
                     // if iron data not null, but hcim null, must be regular iron
+                    if (!isRs3)
+                    {
+                        // if iron data not null, but hcim null, could be a uim
+                        var uimData = await OfficialApiCall(uimUrl + username);
+                        
+                        // if iron data and uim data not null, but hcim null, must be a uim
+                        if (uimData != null)
+                        {
+                            return AccountType.UltimateIronman;
+                        }
+                    }
                     return AccountType.Ironman;
                 }
 

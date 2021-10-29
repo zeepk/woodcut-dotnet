@@ -5,11 +5,11 @@ import { Column } from 'primereact/column';
 import { useAppSelector } from '../../../app/hooks';
 import { selectSkills } from 'features/RS3/rs3Slice';
 import { skillIcon, skillNameArray } from 'utils/helperFunctions';
-import { gainPeriods, isDxpActive } from 'utils/constants';
-import { Rs3Skill } from '../rs3Types';
+import { gainPeriods, isDxpOver } from 'utils/constants';
+import { Skill } from '../../../utils/customTypes';
 import { Dropdown } from 'primereact/dropdown';
 
-const iconTemplate = (rowData: Rs3Skill) => {
+const iconTemplate = (rowData: Skill) => {
 	const icon = skillIcon(rowData.skillId);
 	return (
 		<span className="body--icon p-d-flex p-ai-center">
@@ -19,13 +19,13 @@ const iconTemplate = (rowData: Rs3Skill) => {
 	);
 };
 
-const dayGainTemplate = (rowData: Rs3Skill) => {
+const dayGainTemplate = (rowData: Skill) => {
 	const gainClass = rowData.dayGain > 0 ? 'gain' : '';
 	return <div className={gainClass}>{rowData.dayGain.toLocaleString()}</div>;
 };
 
 export default function Rs3PlayerStatTable() {
-	const defaultIndex = isDxpActive ? gainPeriods.length - 1 : 0;
+	const defaultIndex = !isDxpOver ? gainPeriods.length - 1 : 0;
 	const [gainPeriod, setGainPeriod] = useState(gainPeriods[defaultIndex]);
 	const skills = useAppSelector(selectSkills);
 
@@ -43,7 +43,7 @@ export default function Rs3PlayerStatTable() {
 		/>
 	);
 
-	const otherGainsTemplate = (rowData: Rs3Skill) => {
+	const otherGainsTemplate = (rowData: Skill) => {
 		const gain = rowData[gainPeriod.data];
 		if (gain === null || gain === undefined) {
 			return;
@@ -52,7 +52,7 @@ export default function Rs3PlayerStatTable() {
 		return <div className={gainClass}>{gain.toLocaleString()}</div>;
 	};
 
-	const levelTemplate = (rowData: Rs3Skill) => {
+	const levelTemplate = (rowData: Skill) => {
 		const levelGain = rowData.levelGain > 0 ? `+${rowData.levelGain}` : '';
 		return (
 			<div className="p-d-flex">
@@ -76,7 +76,7 @@ export default function Rs3PlayerStatTable() {
 			<Column className="column--icon" body={iconTemplate} header="Skill" />
 			<Column
 				className="column--rank"
-				body={(rowData: Rs3Skill) => rowData.rank.toLocaleString()}
+				body={(rowData: Skill) => rowData.rank.toLocaleString()}
 				field="rank"
 				header="Rank"
 				sortable
@@ -90,7 +90,7 @@ export default function Rs3PlayerStatTable() {
 			/>
 			<Column
 				className="column--xp"
-				body={(rowData: Rs3Skill) => rowData.xp.toLocaleString()}
+				body={(rowData: Skill) => rowData.xp.toLocaleString()}
 				field="xp"
 				header="XP"
 				sortable

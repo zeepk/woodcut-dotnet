@@ -1,0 +1,76 @@
+import React, { useState } from 'react';
+import 'features/RS3/rs3.scss';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { useAppSelector } from 'app/hooks';
+import { selectMinigames } from 'features/OSRS/osrsSlice';
+import { osrsDataArray } from 'utils/helperFunctions';
+import { gainPeriods } from 'utils/constants';
+import { Minigame } from 'utils/customTypes';
+import { Dropdown } from 'primereact/dropdown';
+
+const nameTemplate = (rowData: Minigame) => (
+	<div>{osrsDataArray[rowData.minigameId]}</div>
+);
+const dayGainTemplate = (rowData: Minigame) => {
+	const gainClass = rowData.dayGain > 0 ? 'gain' : '';
+	return <div className={gainClass}>{rowData.dayGain.toLocaleString()}</div>;
+};
+
+export default function OsrsPlayerMinigameTable() {
+	const [gainPeriod, setGainPeriod] = useState(gainPeriods[0]);
+	const minigames = useAppSelector(selectMinigames);
+
+	const otherGainsHeaderTemplate = (
+		<Dropdown
+			value={gainPeriod}
+			options={gainPeriods}
+			placeholder={gainPeriod.label}
+			onChange={(e) =>
+				setGainPeriod(
+					gainPeriods.find((gp) => gp.value === e.value) || gainPeriods[0],
+				)
+			}
+		/>
+	);
+
+	const otherGainsTemplate = (rowData: Minigame) => {
+		const gain = rowData[gainPeriod.data];
+		if (gain === undefined) {
+			return;
+		}
+		const gainClass = gain > 0 ? 'gain' : '';
+		return <div className={gainClass}>{gain.toLocaleString()}</div>;
+	};
+
+	const OtherGainsColumn = (
+		<Column
+			className="column--other-gains"
+			field={gainPeriod.data}
+			body={otherGainsTemplate}
+			header={otherGainsHeaderTemplate}
+		/>
+	);
+
+	return (
+		<DataTable className="p-datatable-striped" value={minigames}>
+			<Column className="column--icon" body={nameTemplate} header="Skill" />
+			<Column className="column--level" field="score" header="Score" sortable />
+			<Column
+				className="column--rank"
+				body={(rowData: Minigame) => rowData.rank.toLocaleString()}
+				field="rank"
+				header="Rank"
+				sortable
+			/>
+			<Column
+				className="column--day"
+				field="dayGain"
+				body={dayGainTemplate}
+				header="Day"
+				sortable
+			/>
+			{OtherGainsColumn}
+		</DataTable>
+	);
+}

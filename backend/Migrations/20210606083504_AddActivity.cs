@@ -16,7 +16,8 @@ namespace dotnet5_webapp.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Details = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateRecorded = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DateRecorded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateRecordedStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                 },
                 constraints: table =>
                 {

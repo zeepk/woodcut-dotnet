@@ -1,24 +1,27 @@
 import MaxCape from 'assets/images/maxCape.png';
 import SkillIcon from 'assets/skillIcons/1_overall.png';
 import QuestIcon from 'assets/images/questIcon.png';
+import { DateTime } from 'luxon';
 
 // version
-export const versionNumber = '1.0.0';
+export const versionNumber = '1.1.0';
+export const dxpStart = DateTime.fromJSDate(
+	new Date('17 October 1999 12:00 UTC'),
+);
+export const dxpEnd = DateTime.fromJSDate(
+	new Date('19 October 1999 12:00 UTC'),
+);
+export const isDxpUpcoming = DateTime.now() < dxpStart;
+export const isDxpOver = DateTime.now() > dxpEnd;
 
 // urls
 
 export const apiBaseUrl = process.env.REACT_APP_API_URL;
-export const gainsUrl = `${apiBaseUrl}/users/gains`;
 export const playerCountUrl = `${apiBaseUrl}/users/playercount`;
-export const startTrackingUrl = `${apiBaseUrl}/users/track`;
 export const questsUrl = `${apiBaseUrl}/users/quests`;
-export const ironStatusUrl = `${apiBaseUrl}/users/ironstatus`;
 export const detailsUrl = `${apiBaseUrl}/users/details`;
 export const metricsUrl = `${apiBaseUrl}/users/metrics`;
-export const userRsnUrl = `${apiBaseUrl}/users/rs3rsn`;
 export const activitiesUrl = `${apiBaseUrl}/users/activities`;
-export const followUrl = `${apiBaseUrl}/users/follow`;
-export const unfollowUrl = `${apiBaseUrl}/users/unfollow`;
 export const followedUrl = `${apiBaseUrl}/users/following`;
 export const likeUrl = `${apiBaseUrl}/users/like`;
 export const unlikeUrl = `${apiBaseUrl}/users/unlike`;
@@ -42,6 +45,24 @@ export const itemIconUrl =
 export const twitterUsername = '@matthughes2112';
 export const twitterUrl = `https://twitter.com/${twitterUsername}`;
 export const githubUrl = 'https://github.com/zeepk/woodcut';
+
+// rs3
+
+export const gainsUrl = `${apiBaseUrl}/users/gains/rs3`;
+export const startTrackingUrl = `${apiBaseUrl}/users/track/rs3`;
+export const followUrl = `${apiBaseUrl}/users/follow/rs3`;
+export const unfollowUrl = `${apiBaseUrl}/users/unfollow/rs3`;
+export const userRsnUrl = `${apiBaseUrl}/users/rsn/rs3`;
+export const ironStatusUrl = `${apiBaseUrl}/users/ironstatus/rs3`;
+
+// osrs
+
+export const osrsGainsUrl = `${apiBaseUrl}/users/gains/osrs`;
+export const osrsStartTrackingUrl = `${apiBaseUrl}/users/track/osrs`;
+export const osrsFollowUrl = `${apiBaseUrl}/users/follow/osrs`;
+export const osrsUfollowUrl = `${apiBaseUrl}/users/unfollow/osrs`;
+export const osrsUserRsnUrl = `${apiBaseUrl}/users/rsn/osrs`;
+export const osrsIronStatusUrl = `${apiBaseUrl}/users/ironstatus/osrs`;
 
 // icon urls
 export const archJournal =
@@ -72,6 +93,8 @@ export const loginFormErrorMessage =
 	'Email or Password is incorrect. Please try again.';
 export const homeContentTextPre =
 	'Site currently in beta. Start tracking your stats by searching for your player, and then find the Start Tracking button. Feel free to report any bugs/suggestions to';
+export const osrsHomeContentTextPre =
+	'The OSRS version of the site is currently under development. Limited features are available by searching for users via the search bar. Feel free to report any bugs/suggestions to';
 export const homeContentTextPost = 'on Twitter!';
 export const accountSettingsRs3RsnText = 'RS3 Name:';
 export const accountSettingsRs3RsnUpdatePlaceholder = 'New rsn';
@@ -110,6 +133,7 @@ export const dailyResetText = 'Daily reset in: ';
 export const gainsResetText = 'Woodcut gains reset in: ';
 export const checkEmailText =
 	'Check your email (and your spam) for a password reset link!';
+export const dxpTimerText = `Double XP ${isDxpUpcoming ? 'starts' : 'ends'} in`;
 
 // thresholds
 
@@ -148,6 +172,10 @@ export const all120Xp =
 // should be 5,600,000,000 as of Archaeology
 export const maxXp = numberOfSkills * maxSkillXp;
 
+export const daysBeforeDxpToShowTimer = 30;
+export const isDxpClose =
+	dxpStart.diff(DateTime.now()).as('days') < daysBeforeDxpToShowTimer;
+
 // types
 
 export const gainPeriods = [
@@ -176,13 +204,13 @@ export const navbarMenuItems = [
 		path: '/rs3',
 	},
 	{
-		text: 'Compare',
-		path: '/rs3/compare',
+		text: 'Old School',
+		path: '/osrs',
 	},
-	// {
-	// 	text: 'Old School',
-	// 	path: '/osrs',
-	// },
+	{
+		text: 'Compare',
+		path: `/rs3/compare`,
+	},
 ];
 
 export const questBadgeId = 5;
@@ -289,7 +317,3 @@ export const passwordResetSuccessMessage =
 	'Password reset successfully! Redirecting to the home page...';
 export const passwordResetRequestInvalidUserMessage =
 	'Invalid email. Double check and try again.';
-
-// flags
-
-export const isDxpActive = process.env.REACT_APP_DXP_ACTIVE === 'true';

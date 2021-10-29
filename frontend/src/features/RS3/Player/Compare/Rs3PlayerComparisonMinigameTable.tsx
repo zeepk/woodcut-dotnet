@@ -3,12 +3,12 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dropdown } from 'primereact/dropdown';
 import 'features/RS3/rs3.scss';
-import { Rs3Minigame } from 'features/RS3/rs3Types';
+import { Minigame } from 'utils/customTypes';
 import { rs3DataArray } from 'utils/helperFunctions';
 import { comparisonGainPeriods } from 'utils/constants';
 type props = {
-	player1Minigames: Array<Rs3Minigame>;
-	player2Minigames: Array<Rs3Minigame>;
+	player1Minigames: Array<Minigame>;
+	player2Minigames: Array<Minigame>;
 };
 
 export const Rs3PlayerComparisonMinigameTable: FunctionComponent<props> = ({

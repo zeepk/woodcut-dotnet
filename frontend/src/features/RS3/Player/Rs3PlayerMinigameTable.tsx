@@ -6,18 +6,18 @@ import { useAppSelector } from '../../../app/hooks';
 import { selectMinigames } from 'features/RS3/rs3Slice';
 import { rs3DataArray } from 'utils/helperFunctions';
 import { gainPeriods } from 'utils/constants';
-import { Rs3Minigame } from '../rs3Types';
+import { Minigame } from '../../../utils/customTypes';
 import { Dropdown } from 'primereact/dropdown';
 
-const nameTemplate = (rowData: Rs3Minigame) => (
+const nameTemplate = (rowData: Minigame) => (
 	<div>{rs3DataArray[rowData.minigameId]}</div>
 );
-const dayGainTemplate = (rowData: Rs3Minigame) => {
+const dayGainTemplate = (rowData: Minigame) => {
 	const gainClass = rowData.dayGain > 0 ? 'gain' : '';
 	return <div className={gainClass}>{rowData.dayGain.toLocaleString()}</div>;
 };
 
-export default function Rs3PlayerStatTable() {
+export default function Rs3PlayerMinigameTable() {
 	const [gainPeriod, setGainPeriod] = useState(gainPeriods[0]);
 	const minigames = useAppSelector(selectMinigames);
 
@@ -34,7 +34,7 @@ export default function Rs3PlayerStatTable() {
 		/>
 	);
 
-	const otherGainsTemplate = (rowData: Rs3Minigame) => {
+	const otherGainsTemplate = (rowData: Minigame) => {
 		const gain = rowData[gainPeriod.data];
 		if (gain === undefined) {
 			return;
@@ -58,7 +58,7 @@ export default function Rs3PlayerStatTable() {
 			<Column className="column--level" field="score" header="Score" sortable />
 			<Column
 				className="column--rank"
-				body={(rowData: Rs3Minigame) => rowData.rank.toLocaleString()}
+				body={(rowData: Minigame) => rowData.rank.toLocaleString()}
 				field="rank"
 				header="Rank"
 				sortable

@@ -6,7 +6,7 @@ import { Toast } from 'primereact/toast';
 import { DateTime } from 'luxon';
 
 import '../rs3.scss';
-import { Rs3Activity } from 'features/RS3/rs3Types';
+import { Rs3Activity } from 'utils/customTypes';
 import { likeWithoutLoginText, formErrorToastLifetime } from 'utils/constants';
 import { activityIconHelper } from 'utils/helperFunctions';
 import { likeRs3Activity, unlikeRs3Activity } from 'features/RS3/rs3Slice';

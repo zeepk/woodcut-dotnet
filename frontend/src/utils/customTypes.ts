@@ -1,6 +1,6 @@
 import { accountTypes } from 'utils/constants';
 
-export type Rs3Skill = {
+export type Skill = {
 	[index: string]: number | undefined;
 	skillId: number;
 	xp: number;
@@ -13,7 +13,7 @@ export type Rs3Skill = {
 	yearGain: number;
 	dxpGain?: number;
 };
-export type Rs3Minigame = {
+export type Minigame = {
 	[index: string]: number | undefined;
 	minigameId: number;
 	score: number;
