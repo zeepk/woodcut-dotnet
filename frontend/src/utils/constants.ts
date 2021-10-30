@@ -4,12 +4,12 @@ import QuestIcon from 'assets/images/questIcon.png';
 import { DateTime } from 'luxon';
 
 // version
-export const versionNumber = '1.1.1';
+export const versionNumber = '1.1.2';
 export const dxpStart = DateTime.fromJSDate(
-	new Date('17 October 1999 12:00 UTC')
+	new Date('05 November 2021 12:00 UTC')
 );
 export const dxpEnd = DateTime.fromJSDate(
-	new Date('19 October 1999 12:00 UTC')
+	new Date('15 November 2021 12:00 UTC')
 );
 export const isDxpUpcoming = DateTime.now() < dxpStart;
 export const isDxpOver = DateTime.now() > dxpEnd;
