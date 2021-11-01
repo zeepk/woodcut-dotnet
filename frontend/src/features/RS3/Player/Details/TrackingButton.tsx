@@ -6,17 +6,28 @@ import {
 	selectIsTracking,
 	selectUsername,
 	startTrackingForUser,
-} from '../../rs3Slice';
+} from 'features/RS3/rs3Slice';
 import {
 	trackingButtonTextDisabled,
 	trackingButtonTextEnabled,
 } from 'utils/constants';
+import { isOsrs } from 'utils/helperFunctions';
+import {
+	selectOsrsIsTracking,
+	selectOsrsUsername,
+	startTrackingForUserOsrs,
+} from 'features/OSRS/osrsSlice';
 
 export default function TrackingButton() {
 	const dispatch = useAppDispatch();
 
-	const isTracking = useAppSelector(selectIsTracking);
-	const username = useAppSelector(selectUsername);
+	const isTrackingRs3 = useAppSelector(selectIsTracking);
+	const isTrackingOsrs = useAppSelector(selectOsrsIsTracking);
+	const isTracking = isOsrs() ? isTrackingOsrs : isTrackingRs3;
+
+	const usernameRs3 = useAppSelector(selectUsername);
+	const usernameOsrs = useAppSelector(selectOsrsUsername);
+	const username = isOsrs() ? usernameOsrs : usernameRs3;
 
 	const trackingButtonText = isTracking
 		? trackingButtonTextEnabled
@@ -27,7 +38,11 @@ export default function TrackingButton() {
 
 	const handleButtonClick = () => {
 		if (!isTracking) {
-			dispatch(startTrackingForUser());
+			if (isOsrs()) {
+				dispatch(startTrackingForUserOsrs());
+			} else {
+				dispatch(startTrackingForUser());
+			}
 		}
 	};
 

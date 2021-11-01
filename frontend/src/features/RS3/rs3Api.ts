@@ -10,7 +10,7 @@ import {
 	likeUrl,
 	unlikeUrl,
 	ironStatusUrl,
-} from '../../utils/constants';
+} from 'utils/constants';
 
 export async function getStats(username: string) {
 	const requestOptions = {

@@ -63,6 +63,7 @@ import {
 	regularSkill120Xp,
 	eliteSkill99Xp,
 	eliteSkill120Xp,
+	gameVersions,
 } from 'utils/constants';
 import { Rs3Activity, Skill } from 'utils/customTypes';
 
@@ -529,3 +530,8 @@ export const calcSkillPercentage = (flag: string, data: Array<Skill>) => {
 			};
 	}
 };
+
+export const getGameVersion = () =>
+	window.location.href.includes('osrs') ? gameVersions.OSRS : gameVersions.RS3;
+
+export const isOsrs = () => getGameVersion() === gameVersions.OSRS;
