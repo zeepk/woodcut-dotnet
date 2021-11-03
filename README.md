@@ -23,3 +23,9 @@ Stat tracking app for the popular MMO _Runescape_
 - Chart.js
 - Luxon DateTime
 - Sass
+
+## Branch Structure
+
+- `master`: usually the most recent prod deployment
+- `dev`: latest code, may not be 100% functional
+- `release-x.x.x`: code for that particular release

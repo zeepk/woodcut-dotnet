@@ -71,7 +71,7 @@ export default function Rs3PlayerLandingPage() {
 	}
 
 	const updateTab = (index: number) => {
-		if (index === 0 && activitiesLoaded === false) {
+		if (index === 2 && activitiesLoaded === false) {
 			activitiesLoaded = true;
 			const formattedUsername = username.split('+').join(' ');
 			dispatch(getPlayerMetrics(formattedUsername));

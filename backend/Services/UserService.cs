@@ -443,6 +443,7 @@ namespace dotnet5_webapp.Services
             newStatRecord.Skills = skills;
             newStatRecord.Minigames = minigames;
             player.StatRecords.Add(newStatRecord);
+            Console.WriteLine("Successfully created stat record for: " + player.Username + " with id: " + player.Id);
         }
         
         public async Task<UserSearchResponse> SearchForPlayer(String username, GameVersion gameVersion)
