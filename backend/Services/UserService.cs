@@ -392,7 +392,6 @@ namespace dotnet5_webapp.Services
             List<Minigame> minigames = new List<Minigame>();
             var officialApiUrl = player.GameVersion == GameVersion.RS3 ? Constants.RunescapeApiBaseUrlRs3 : Constants.RunescapeApiBaseUrlOsrs;
             var skillCount = player.GameVersion == GameVersion.RS3 ? Constants.TotalSkillsRs3 : Constants.TotalSkillsOsrs;
-            
             var apiData = await OfficialApiCall(officialApiUrl + player.Username);
             if (apiData == null)
             {

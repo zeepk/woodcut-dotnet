@@ -37,6 +37,7 @@ export function Navbar() {
 		dispatch(getCurrentPlayerCount());
 		dispatch(getRs3Rsn());
 		dispatch(getFollowing());
+
 		const initialVersion = window.localStorage.getItem(
 			localStorageSearchVersion
 		);

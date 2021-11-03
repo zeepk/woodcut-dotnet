@@ -307,7 +307,7 @@ export enum gameVersions {
 }
 
 export const gameVersionRs3Text = 'rs3';
-export const gameVersionOsrsText = 'rs3';
+export const gameVersionOsrsText = 'osrs';
 export const localStorageSearchVersion = 'WoodcutSearchGameVersion';
 
 export const footerLinks = [
