@@ -6,10 +6,10 @@ import { DateTime } from 'luxon';
 // version
 export const versionNumber = '1.1.0';
 export const dxpStart = DateTime.fromJSDate(
-	new Date('17 October 1999 12:00 UTC'),
+	new Date('17 October 1999 12:00 UTC')
 );
 export const dxpEnd = DateTime.fromJSDate(
-	new Date('19 October 1999 12:00 UTC'),
+	new Date('19 October 1999 12:00 UTC')
 );
 export const isDxpUpcoming = DateTime.now() < dxpStart;
 export const isDxpOver = DateTime.now() > dxpEnd;
@@ -305,6 +305,10 @@ export enum gameVersions {
 	RS3,
 	OSRS,
 }
+
+export const gameVersionRs3Text = 'rs3';
+export const gameVersionOsrsText = 'rs3';
+export const localStorageSearchVersion = 'WoodcutSearchGameVersion';
 
 export const footerLinks = [
 	{ id: 0, text: `v${versionNumber}`, class: 'version' },

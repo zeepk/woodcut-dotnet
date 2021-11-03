@@ -36,7 +36,8 @@
 				}
 			}
 
-			.container--search-form {
+			.container--search-form,
+			.container--search-switch {
 				padding-left: 1.5rem;
 			}
 
@@ -62,6 +63,15 @@
 		.container--search-form {
 			min-width: 8rem;
 			margin-right: 1rem;
+		}
+		.container--search-switch {
+			margin-right: 0.5rem;
+			min-width: 4rem;
+		}
+		.container--game-switch {
+			.text--switch-label {
+				font-size: 0.7rem;
+			}
 		}
 	}
 	.navbar-item {
