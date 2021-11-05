@@ -7,8 +7,8 @@ namespace dotnet5_webapp.Utils
     public class Constants
     {
         public const bool dxpEnabled = true;
-        public const string dxpStartDateString = "2021/08/06";
-        public const string dxpEndDateString = "2021/08/16";
+        public const string dxpStartDateString = "2021/11/05";
+        public const string dxpEndDateString = "2021/11/15";
 
         public const string RunescapeApiBaseUrlRs3 = "https://secure.runescape.com/m=hiscore/index_lite.ws?player=";
         public const string RunescapeImApiBaseUrlRs3 = "https://secure.runescape.com/m=hiscore_ironman/index_lite.ws?player=";
