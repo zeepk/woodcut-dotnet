@@ -535,3 +535,8 @@ export const getGameVersion = () =>
 	window.location.href.includes('osrs') ? gameVersions.OSRS : gameVersions.RS3;
 
 export const isOsrs = () => getGameVersion() === gameVersions.OSRS;
+
+export const isElectron = () => {
+	const userAgent = navigator.userAgent.toLowerCase();
+	return userAgent.indexOf(' electron/') !== -1;
+};

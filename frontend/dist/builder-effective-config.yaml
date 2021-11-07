@@ -1,0 +1,12 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.app.id
+productName: Woodcut
+files:
+  - filter:
+      - build/**/*
+      - electron/main.ts
+      - package.json
+extends: null
+electronVersion: 15.3.0
