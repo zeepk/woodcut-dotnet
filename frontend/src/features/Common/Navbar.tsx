@@ -6,6 +6,7 @@ import { useAppDispatch } from '../../app/hooks';
 import { Menubar } from 'primereact/menubar';
 import { InputText } from 'primereact/inputtext';
 import { Sidebar } from 'primereact/sidebar';
+import { InputSwitch } from 'primereact/inputswitch';
 
 import {
 	getCurrentPlayerCount,
@@ -15,7 +16,12 @@ import {
 import { NavbarItem } from './NavbarItem';
 import { SidebarContent } from './SidebarContent';
 import { AuthButton } from 'features/Common/Account/AuthButton';
-import { navbarMenuItems } from 'utils/constants';
+import {
+	navbarMenuItems,
+	gameVersionRs3Text,
+	gameVersionOsrsText,
+	localStorageSearchVersion,
+} from 'utils/constants';
 import Logo from '../../assets/images/logo.png';
 import 'features/Common/common.scss';
 import { DxpTimer } from './DxpTimer';
@@ -25,16 +31,31 @@ export function Navbar() {
 	const dispatch = useAppDispatch();
 	const [value, setValue] = useState('');
 	const [sidebarVisible, setSidebarVisible] = useState(false);
+	const [searchGameVersion, setSearchGameVersion] = useState(false);
 
 	useEffect(() => {
 		dispatch(getCurrentPlayerCount());
 		dispatch(getRs3Rsn());
 		dispatch(getFollowing());
+
+		const initialVersion = window.localStorage.getItem(
+			localStorageSearchVersion
+		);
+		if (initialVersion === 'true' || initialVersion === 'false') {
+			setSearchGameVersion(JSON.parse(initialVersion));
+		}
 	}, [dispatch]);
+
+	const setGameVersion = (value: boolean) => {
+		window.localStorage.setItem(localStorageSearchVersion, value.toString());
+		setSearchGameVersion(value);
+	};
 
 	const handleSearch = (e: any) => {
 		e.preventDefault();
-		const gameVersion = window.location.href.includes('rs3') ? 'rs3' : 'osrs';
+		const gameVersion = searchGameVersion
+			? gameVersionOsrsText
+			: gameVersionRs3Text;
 		if (value.toString().trim() !== '') {
 			history.push(`/${gameVersion}/user/${value.split(' ').join('+')}`);
 		}
@@ -63,6 +84,19 @@ export function Navbar() {
 		{
 			template: () => <DxpTimer />,
 			className: 'container--dxp',
+		},
+		{
+			template: () => (
+				<div className="container--game-switch p-d-flex p-flex-column p-ai-center">
+					<p className="text--switch-label p-m-0">RS3 / OSRS</p>
+					<InputSwitch
+						className="p-mt-1"
+						checked={searchGameVersion}
+						onChange={(e) => setGameVersion(e.value)}
+					/>
+				</div>
+			),
+			className: 'container--search-switch',
 		},
 		{
 			template: () => (
