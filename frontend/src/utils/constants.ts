@@ -6,10 +6,10 @@ import { DateTime } from 'luxon';
 // version
 export const versionNumber = '1.1.1';
 export const dxpStart = DateTime.fromJSDate(
-	new Date('05 November 2021 12:00 UTC')
+	new Date('18 February 2022 12:00 UTC')
 );
 export const dxpEnd = DateTime.fromJSDate(
-	new Date('15 November 2021 12:00 UTC')
+	new Date('28 February 2022 12:00 UTC')
 );
 export const isDxpUpcoming = DateTime.now() < dxpStart;
 export const isDxpOver = DateTime.now() > dxpEnd;
