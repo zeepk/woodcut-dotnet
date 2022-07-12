@@ -1057,7 +1057,10 @@ namespace dotnet5_webapp.Services
             if (activity.Title.Contains("I found "))
             {
                 var item = new string("");
-                if (activity.Title.Contains("I found a "))
+                if (activity.Title.Contains("I found a pair of "))
+                {
+                    item = activity.Title.Split("I found a pair of ")[1];
+                } else if (activity.Title.Contains("I found a "))
                 {
                     item = activity.Title.Split("I found a ")[1];
                 } else if (activity.Title.Contains("I found an "))
