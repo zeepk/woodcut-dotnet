@@ -167,7 +167,7 @@ namespace dotnet5_webapp.Repos
             var activities = await Context.Follow
                 .Where(f => f.User == user)
                 .Include(f => f.Player)
-                .Join(Context.Activity.Include(a => a.Player).Include(a => a.Likes), f => f.Player.Id, a => a.Player.Id, 
+                .Join(Context.Activity.OrderByDescending(a => a.DateRecorded).Take(50).Include(a => a.Player).Include(a => a.Likes), f => f.Player.Id, a => a.Player.Id, 
                     (f, a) => a)
                 .OrderByDescending(a => a.DateRecorded)
                 .ToListAsync();
@@ -199,12 +199,12 @@ namespace dotnet5_webapp.Repos
         {
             var activities = await Context.Activity
                 .OrderByDescending(a => a.DateRecorded)
+                .Take(size)
                 .Include(a => a.Player)
                 .Include(a => a.Likes)
                 .ToListAsync();
             return activities
                 .Where(a => isImportantActivity(a.Title, a.Details))
-                .Take(size)
                 .ToList();
         }
         public async Task<StatRecord> GetYesterdayRecord(int userId)

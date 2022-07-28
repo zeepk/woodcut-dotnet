@@ -9,5 +9,6 @@ namespace dotnet5_webapp.Internal
         public string? IconUri { get; set; }
         public int Likes { get; set; }
         public bool CurrentUserLiked { get; set; }
+	public int Importance { get; set; }
     }
 }

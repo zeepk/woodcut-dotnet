@@ -44,8 +44,8 @@ namespace dotnet5_webapp.Services
             }
             var result = await response.Content.ReadAsStringAsync();
             return result;
-        }       
-        
+        }
+
         public async Task<ResponseWrapper<(string, string)>> CurrentVos()
         {
             var twitterApiKey = Configuration["TwitterApiKey"];
@@ -54,10 +54,10 @@ namespace dotnet5_webapp.Services
                 new AuthenticationHeaderValue("Bearer", twitterApiKey);
             var reqResp = new HttpResponseMessage();
             reqResp = await client.GetAsync("https://api.twitter.com/2/users/3429940841/tweets?max_results=5");
-            
+
             var response = new ResponseWrapper<(string, string)>()
             {
-                    Success = false,
+                Success = false,
             };
 
             try
@@ -78,10 +78,10 @@ namespace dotnet5_webapp.Services
             response.Data = (innerString.First(), innerString.Last());
             response.Status = "Success";
             response.Success = true;
-            
+
             return response;
-        }         
-        
+        }
+
         private async Task<(ICollection<Skill>, ICollection<Minigame>)> GetCurrentStats(Player user)
         {
             var apiData = String.Empty;
@@ -99,7 +99,7 @@ namespace dotnet5_webapp.Services
             {
                 apiData = user.RecentStats;
             }
-            
+
             var skillCount = user.GameVersion == GameVersion.RS3 ? Constants.TotalSkillsRs3 : Constants.TotalSkillsOsrs;
             List<Skill> skills = new List<Skill>();
             List<Minigame> minigames = new List<Minigame>();
@@ -119,11 +119,11 @@ namespace dotnet5_webapp.Services
                     Level = Int32.Parse(stat[1]),
                     Rank = Int32.Parse(stat[0]),
                 };
-                
+
                 // round instances of -1 to 0 instead
                 skill.Xp = skill.Xp < 0 ? 0 : skill.Xp;
                 skill.Rank = skill.Rank < 0 ? 0 : skill.Rank;
-                
+
                 skills.Add(skill);
             }
 
@@ -137,7 +137,7 @@ namespace dotnet5_webapp.Services
                     Score = Int32.Parse(stat[1]),
                     Rank = Int32.Parse(stat[0]),
                 };
-                
+
                 // round instances of -1 to 0 instead
                 minigame.Score = minigame.Score < 0 ? 0 : minigame.Score;
                 minigame.Rank = minigame.Rank < 0 ? 0 : minigame.Rank;
@@ -160,26 +160,26 @@ namespace dotnet5_webapp.Services
             }
             return result;
         }
-        
+
         public async Task<List<ActivityResponse>> GetAllActivities(int size)
         {
             var activityList = await _UserRepo.GetLimitedActivities(size);
-            var activityTasks =  activityList.Select(async a => await FormatActivity(a, null));
+            var activityTasks = activityList.Select(async a => await FormatActivity(a, null));
             var activityResponses = await Task.WhenAll(activityTasks);
-            return activityResponses.ToList();
+            return activityResponses.Where(a => !(a.Price != null && a.Price < 1000000)).ToList();
         }
-        
+
         public async Task<ResponseWrapper<PlayerDetailsServiceResponse>> GetPlayerDetails(string username)
         {
             var data = new PlayerDetailsServiceResponse();
             var apiData = "";
             try
             {
-            apiData = await OfficialApiCall(Constants.RunescapeApiPlayerDetailsUrlPre + username + Constants.RunescapeApiPlayerDetailsUrlPost);
-            var apiItems = apiData.Remove(0, 33).Split("\"");
-            
-            data.Username = apiItems[7];
-            data.ClanName = apiItems[11];
+                apiData = await OfficialApiCall(Constants.RunescapeApiPlayerDetailsUrlPre + username + Constants.RunescapeApiPlayerDetailsUrlPost);
+                var apiItems = apiData.Remove(0, 33).Split("\"");
+
+                data.Username = apiItems[7];
+                data.ClanName = apiItems[11];
             }
             catch (Exception e)
             {
@@ -191,13 +191,13 @@ namespace dotnet5_webapp.Services
                     Data = data
                 };
             }
-            
+
             return new ResponseWrapper<PlayerDetailsServiceResponse>
             {
                 Success = true,
                 Data = data
             };
-        }            
+        }
         public async Task<ResponseWrapper<Player>> UpdateIronStatus(String username, GameVersion gameVersion)
         {
             var response = new ResponseWrapper<Player>
@@ -205,20 +205,20 @@ namespace dotnet5_webapp.Services
                 Success = true,
                 Data = null
             };
-            
+
             var player = await _UserRepo.GetPlayerByUsernameLite(username, gameVersion);
             if (player == null)
             {
                 response.Status = $"User {username} not found in the Official API details table";
                 return response;
             }
-            
+
             var accountStatus = await GetAccountStatus(username, gameVersion);
             player = await _UserRepo.UpdatePlayerIronStatus(player, accountStatus);
-            
+
             response.Data = player;
             return response;
-        }          
+        }
         public async Task<ResponseWrapper<AccountType>> GetIronStatus(String username, GameVersion gameVersion)
         {
             var response = new ResponseWrapper<AccountType>
@@ -226,7 +226,7 @@ namespace dotnet5_webapp.Services
                 Success = true,
                 Data = AccountType.Main
             };
-            
+
             var player = await _UserRepo.GetPlayerByUsernameLite(username, gameVersion);
             if (player == null)
             {
@@ -236,7 +236,7 @@ namespace dotnet5_webapp.Services
 
             response.Data = player.IronmanStatus;
             return response;
-        }         
+        }
         public async Task<ResponseWrapper<PlayerQuestsServiceResponse>> GetPlayerQuests(String username)
         {
             var data = new PlayerQuestsServiceResponse();
@@ -246,12 +246,12 @@ namespace dotnet5_webapp.Services
                 var apiData = await OfficialApiCall(Constants.RunescapeApiQuestsUrl + username);
                 JObject joResponse = JObject.Parse(apiData);
                 data.Username = username;
-                var totalQuests = 0; 
+                var totalQuests = 0;
                 var completedQuests = 0;
                 var questPoints = 0;
                 var totalQuestPoints = 0;
-                
-                JArray quests = (JArray)joResponse ["quests"];
+
+                JArray quests = (JArray)joResponse["quests"];
                 foreach (var quest in quests)
                 {
                     var qp = quest.Value<int>("questPoints");
@@ -274,7 +274,7 @@ namespace dotnet5_webapp.Services
                         Data = data
                     };
                 }
-                
+
                 data.TotalQuests = totalQuests;
                 data.CompletedQuests = completedQuests;
                 data.QuestPoints = questPoints;
@@ -291,13 +291,13 @@ namespace dotnet5_webapp.Services
                     Data = data
                 };
             }
-            
+
             return new ResponseWrapper<PlayerQuestsServiceResponse>
             {
                 Success = true,
                 Data = data
             };
-        }        
+        }
         public async Task<ResponseWrapper<PlayerMetricsServiceResponse>> GetPlayerMetrics(String username)
         {
             var data = new PlayerMetricsServiceResponse();
@@ -305,36 +305,36 @@ namespace dotnet5_webapp.Services
 
             try
             {
-            var apiData = await OfficialApiCall(Constants.RunescapeApiPlayerMetricsUrlPre + username + Constants.RunescapeApiPlayerMetricsUrlPost);
-            JObject joResponse = JObject.Parse(apiData);
-            var questsComplete = (int)joResponse["questscomplete"];
-            var name = (string)joResponse["name"];
-            data.Username = name;
-            data.QuestsComplete = questsComplete;
+                var apiData = await OfficialApiCall(Constants.RunescapeApiPlayerMetricsUrlPre + username + Constants.RunescapeApiPlayerMetricsUrlPost);
+                JObject joResponse = JObject.Parse(apiData);
+                var questsComplete = (int)joResponse["questscomplete"];
+                var name = (string)joResponse["name"];
+                data.Username = name;
+                data.QuestsComplete = questsComplete;
 
-            var activityList = new List<Activity>();
-            JArray activities = (JArray)joResponse ["activities"];
-            foreach (var activity in activities)
-            {
-                var dateString = activity.Value<String>("date");
-                var dateRecorded = DateTime.Parse(dateString);
-                var newActivity = new Activity()
+                var activityList = new List<Activity>();
+                JArray activities = (JArray)joResponse["activities"];
+                foreach (var activity in activities)
                 {
-                    Player = user,
-                    UserId = user.Id,
-                    DateRecorded = dateRecorded,
-                    DateRecordedStamp = dateString,
-                    Title = activity.Value<String>("text"),
-                    Details = activity.Value<String>("details"),
-                };
-                activityList.Add(newActivity);
-            }
+                    var dateString = activity.Value<String>("date");
+                    var dateRecorded = DateTime.Parse(dateString);
+                    var newActivity = new Activity()
+                    {
+                        Player = user,
+                        UserId = user.Id,
+                        DateRecorded = dateRecorded,
+                        DateRecordedStamp = dateString,
+                        Title = activity.Value<String>("text"),
+                        Details = activity.Value<String>("details"),
+                    };
+                    activityList.Add(newActivity);
+                }
 
-            var addedActivities = await _UserRepo.CreateActivities(activityList);
+                var addedActivities = await _UserRepo.CreateActivities(activityList);
 
-            var activityTasks =  activityList.Select(async a => await FormatActivity(a, null));
-            var activityResponses = await Task.WhenAll(activityTasks);
-            data.Activities = activityResponses.ToList();
+                var activityTasks = activityList.Select(async a => await FormatActivity(a, null));
+                var activityResponses = await Task.WhenAll(activityTasks);
+                data.Activities = activityResponses.ToList();
             }
             catch (Exception e)
             {
@@ -346,7 +346,7 @@ namespace dotnet5_webapp.Services
                     Data = data
                 };
             }
-            
+
             return new ResponseWrapper<PlayerMetricsServiceResponse>
             {
                 Success = true,
@@ -361,8 +361,8 @@ namespace dotnet5_webapp.Services
             {
                 var activityApiData = await OfficialApiCall(Constants.RunescapeApiPlayerMetricsUrlPre + player.Username + Constants.RunescapeApiPlayerMetricsUrlPost);
                 JObject joResponse = JObject.Parse(activityApiData);
-            
-                JArray jsonActivities = (JArray)joResponse ["activities"];
+
+                JArray jsonActivities = (JArray)joResponse["activities"];
                 foreach (var activity in jsonActivities)
                 {
                     var dateString = activity.Value<String>("date");
@@ -445,7 +445,7 @@ namespace dotnet5_webapp.Services
             player.StatRecords.Add(newStatRecord);
             Console.WriteLine("Successfully created stat record for: " + player.Username + " with id: " + player.Id);
         }
-        
+
         public async Task<UserSearchResponse> SearchForPlayer(String username, GameVersion gameVersion)
         {
             var response = new UserSearchResponse();
@@ -460,7 +460,7 @@ namespace dotnet5_webapp.Services
                 response.WasCreated = false;
             }
             response.User = user;
-            
+
             return response;
         }
         public async Task<ApplicationUser> SearchForUser(String username)
@@ -472,7 +472,7 @@ namespace dotnet5_webapp.Services
         public async Task<List<String>> AddNewStatRecordForAllUsers()
         {
             var users = await _UserRepo.GetAllTrackableUsers();
-            
+
             var tasks = users.ToList().Select(u => CreateStatRecord(u));
             await Task.WhenAll(tasks);
 
@@ -481,15 +481,15 @@ namespace dotnet5_webapp.Services
             // don't really need to pass a user, but await doesn't work well with methods which return void
             var user = await _UserRepo.SaveChanges(users.FirstOrDefault());
             return usernames.ToList();
-        }        
+        }
         public async Task<List<Activity>> AddNewActivitiesForAllUsers()
         {
             var users = await _UserRepo.GetAllTrackableUsers();
-            
+
             var activityTasks = users.ToList().Select(u => UpdateActivitiesForPlayer(u));
             var activities = await Task.WhenAll(activityTasks);
-            
-            var updatedActivities = await _UserRepo.CreateActivities(activities.SelectMany( i => i ).ToList());           
+
+            var updatedActivities = await _UserRepo.CreateActivities(activities.SelectMany(i => i).ToList());
             // don't really need to pass a user, but await doesn't work well with methods which return void
             return updatedActivities;
         }
@@ -498,7 +498,7 @@ namespace dotnet5_webapp.Services
         {
             // creating new user
             var accountType = await GetAccountStatus(username, gameVersion);
-            
+
             Player newPlayer = new Player()
             {
                 DateCreated = DateTime.Now,
@@ -509,7 +509,7 @@ namespace dotnet5_webapp.Services
                 GameVersion = gameVersion,
                 IronmanStatus = accountType
             };
-            
+
             // if the user is not found in the Official API, this will error out
             try
             {
@@ -533,7 +533,7 @@ namespace dotnet5_webapp.Services
                 Success = true,
                 Status = ""
             };
-            
+
             var user = await _UserRepo.GetPlayerByUsernameLite(username, gameVersion);
             if (user == null)
             {
@@ -541,7 +541,7 @@ namespace dotnet5_webapp.Services
                 response.Status = "User does not exist in the database.";
                 return response;
             }
-            
+
             user = await _UserRepo.StartTrackingUser(user);
             response.Data = user.IsTracking;
             return response;
@@ -555,7 +555,7 @@ namespace dotnet5_webapp.Services
                 Status = "",
                 Data = new CurrentGainForUserServiceResponse()
             };
-            
+
             var user = await _UserRepo.GetPlayerByUsernameLite(username, gameVersion);
             if (user == null)
             {
@@ -570,15 +570,15 @@ namespace dotnet5_webapp.Services
                 }
                 response.Status = "User created.";
             }
-            
+
             response.Data.Username = username;
             response.Data.IsTracking = user.IsTracking;
-            
+
             var skillGains = new List<SkillGain>();
             var minigameGains = new List<MinigameGain>();
             var badges = new List<Constants.BadgeType>();
             var skillCount = user.GameVersion == GameVersion.RS3 ? Constants.TotalSkillsRs3 : Constants.TotalSkillsOsrs;
-            
+
             // get current stats to show and compare to records
             var (currentSkills, currentMinigames) = await GetCurrentStats(user);
 
@@ -588,7 +588,7 @@ namespace dotnet5_webapp.Services
                 response.Success = false;
                 return response;
             }
-            
+
             // establish dxp start and end
             var dxpStartDate = DateTime.Parse(Constants.dxpStartDateString);
             var dxpEndDate = DateTime.Parse(Constants.dxpEndDateString);
@@ -608,10 +608,10 @@ namespace dotnet5_webapp.Services
             for (var i = 0; i < skillCount; i++)
             {
                 var skillGain = new SkillGain();
-                
+
                 // one skill at a time
                 var currentSkill = currentSkills.ElementAt(i);
-                
+
                 skillGain.SkillId = currentSkill.SkillId;
                 skillGain.Xp = currentSkill.Xp;
                 skillGain.Level = currentSkill.Level;
@@ -629,7 +629,7 @@ namespace dotnet5_webapp.Services
                     if (monthRecord == null)
                     {
                         monthRecord = dayRecord;
-                    }                    
+                    }
                     var monthSkill = monthRecord.Skills.Where(s => s.SkillId == currentSkill.SkillId).FirstOrDefault();
                     var yearSkill = yearRecord.Skills.Where(s => s.SkillId == currentSkill.SkillId).FirstOrDefault();
                     var dxpStartSkill = dxpStartRecord.Skills.Where(s => s.SkillId == currentSkill.SkillId).FirstOrDefault();
@@ -660,9 +660,9 @@ namespace dotnet5_webapp.Services
             for (var i = 0; i < currentMinigames.Count; i++)
             {
                 var minigameGain = new MinigameGain();
-                
+
                 var currentMinigame = currentMinigames.ElementAt(i);
-                
+
                 minigameGain.MinigameId = currentMinigame.MinigameId;
                 minigameGain.Score = currentMinigame.Score;
                 minigameGain.Rank = currentMinigame.Rank;
@@ -673,7 +673,7 @@ namespace dotnet5_webapp.Services
                     var weekMinigame = weekRecord.Minigames.Where(s => s.MinigameId == currentMinigame.MinigameId).FirstOrDefault();
                     var monthMinigame = monthRecord.Minigames.Where(s => s.MinigameId == currentMinigame.MinigameId).FirstOrDefault();
                     var yearMinigame = yearRecord.Minigames.Where(s => s.MinigameId == currentMinigame.MinigameId).FirstOrDefault();
-                    
+
                     if (dayMinigame.Score < 0 || weekMinigame.Score < 0 || monthMinigame.Score < 0 || yearMinigame.Score < 0)
                     {
                         dayMinigame.Score = dayMinigame.Score < 0 ? 0 : dayMinigame.Score;
@@ -681,7 +681,7 @@ namespace dotnet5_webapp.Services
                         monthMinigame.Score = monthMinigame.Score < 0 ? 0 : monthMinigame.Score;
                         yearMinigame.Score = yearMinigame.Score < 0 ? 0 : yearMinigame.Score;
                     }
-                    
+
                     minigameGain.DayGain = currentMinigame.Score - dayMinigame.Score;
                     minigameGain.WeekGain = currentMinigame.Score - weekMinigame.Score;
                     minigameGain.MonthGain = currentMinigame.Score - monthMinigame.Score;
@@ -689,7 +689,7 @@ namespace dotnet5_webapp.Services
                 }
                 minigameGains.Add(minigameGain);
             }
-            
+
             // add appropriate badges
 
             var lowestLevel = skillGains.Min(sg => sg.Level);
@@ -699,7 +699,7 @@ namespace dotnet5_webapp.Services
             if (skillGains.FirstOrDefault().Xp == Constants.MaxXp)
             {
                 badges.Add(Constants.BadgeType.MaxXp);
-            }            
+            }
             else if (skillGains.Min(sg => sg.Xp) >= 104273167 && skillGains[27].Xp > 80618654)
             {
                 badges.Add(Constants.BadgeType.All120);
@@ -711,13 +711,13 @@ namespace dotnet5_webapp.Services
             else if (lowestLevel >= 99)
             {
                 badges.Add(Constants.BadgeType.Maxed);
-            }            
+            }
             else
             {
                 var baseLevel = (lowestNonEliteLevel /= 10) * 10;
                 if (baseLevel > 0)
                 {
-                    badges.Add((Constants.BadgeType) baseLevel);
+                    badges.Add((Constants.BadgeType)baseLevel);
                 }
             }
 
@@ -725,10 +725,10 @@ namespace dotnet5_webapp.Services
             response.Data.MinigameGains = minigameGains;
             response.Data.Badges = badges;
             response.Data.DisplayName = user.DisplayName;
-            
+
             return response;
         }
-        
+
         public async Task<ResponseWrapper<ICollection<String>>> GetFollowedPlayerNames(ApplicationUser user)
         {
             var response = new ResponseWrapper<ICollection<String>>
@@ -736,11 +736,11 @@ namespace dotnet5_webapp.Services
                 Success = true,
                 Status = ""
             };
-            
+
             var usernames = await _UserRepo.GetFollowedPlayerNames(user);
             response.Data = usernames;
             return response;
-        }          
+        }
         public async Task<ResponseWrapper<ICollection<ActivityResponse>>> GetFollowedPlayerActivities(ApplicationUser user, int size)
         {
             var response = new ResponseWrapper<ICollection<ActivityResponse>>
@@ -748,21 +748,22 @@ namespace dotnet5_webapp.Services
                 Success = true,
                 Status = ""
             };
-            
+
             var activities = await _UserRepo.GetFollowedPlayerActivities(user, size);
-            var activityTasks =  activities.Select(async a => await FormatActivity(a, user));
+            var activityTasks = activities.Select(async a => await FormatActivity(a, user));
             var activityResponses = await Task.WhenAll(activityTasks);
             response.Data = activityResponses.ToList();
             return response;
-        }         
+        }
         public async Task<ResponseWrapper<String>> FollowPlayer(String username, ApplicationUser user, GameVersion gameVersion)
         {
             var response = new ResponseWrapper<String>
             {
                 Success = true,
-                Status = "", Data = username
+                Status = "",
+                Data = username
             };
-            
+
             var player = await _UserRepo.GetPlayerWithRecordsByUsername(username, gameVersion);
             if (player == null)
             {
@@ -786,7 +787,7 @@ namespace dotnet5_webapp.Services
             }
 
             return response;
-        }         
+        }
         public async Task<ResponseWrapper<Activity>> LikeActivity(ApplicationUser user, int activityId)
         {
             var response = new ResponseWrapper<Activity>
@@ -794,7 +795,7 @@ namespace dotnet5_webapp.Services
                 Success = true,
                 Status = "",
             };
-            
+
             var activity = await _UserRepo.GetActivityById(activityId);
             if (activity == null)
             {
@@ -820,7 +821,7 @@ namespace dotnet5_webapp.Services
             response.Data = updatedActivity;
 
             return response;
-        }         
+        }
         public async Task<ResponseWrapper<Activity>> UnlikeActivity(ApplicationUser user, int activityId)
         {
             var response = new ResponseWrapper<Activity>
@@ -828,7 +829,7 @@ namespace dotnet5_webapp.Services
                 Success = true,
                 Status = "",
             };
-            
+
             var activity = await _UserRepo.GetActivityById(activityId);
             if (activity == null)
             {
@@ -848,7 +849,7 @@ namespace dotnet5_webapp.Services
             response.Data = updatedActivity;
 
             return response;
-        } 
+        }
         public async Task<ResponseWrapper<String>> UnfollowPlayer(String username, ApplicationUser user, GameVersion gameVersion)
         {
             var response = new ResponseWrapper<String>
@@ -857,7 +858,7 @@ namespace dotnet5_webapp.Services
                 Status = "",
                 Data = username
             };
-            
+
             var player = await _UserRepo.GetPlayerWithRecordsByUsername(username, gameVersion);
             if (player == null)
             {
@@ -865,7 +866,7 @@ namespace dotnet5_webapp.Services
                 response.Status = "Player does not exist in the database.";
                 return response;
             }
-            
+
             var updatedPlayer = await _UserRepo.UnfollowPlayer(player, user);
             if (updatedPlayer == null)
             {
@@ -873,9 +874,9 @@ namespace dotnet5_webapp.Services
                 response.Status = "Follow action failed.";
                 return response;
             }
-            
+
             return response;
-        }        
+        }
         public async Task<ResponseWrapper<string>> UpdateRsn(String username, ApplicationUser user, GameVersion gameVersion)
         {
             var response = new ResponseWrapper<string>
@@ -883,7 +884,7 @@ namespace dotnet5_webapp.Services
                 Success = true,
                 Status = ""
             };
-            
+
             var player = await _UserRepo.GetPlayerWithRecordsByUsername(username, gameVersion);
             if (player == null)
             {
@@ -891,7 +892,7 @@ namespace dotnet5_webapp.Services
                 response.Status = "Player does not exist in the database.";
                 return response;
             }
-            
+
             var updatedPlayer = await _UserRepo.UpdateRsn(username, user, gameVersion);
             if (updatedPlayer == false)
             {
@@ -903,7 +904,7 @@ namespace dotnet5_webapp.Services
             response.Data = username;
 
             return response;
-        }        
+        }
         public async Task<ResponseWrapper<ICollection<String>>> SeedPlayersFromClanMemberList(String clanName)
         {
             var response = new ResponseWrapper<ICollection<String>>
@@ -911,9 +912,9 @@ namespace dotnet5_webapp.Services
                 Success = true,
                 Status = ""
             };
-            
+
             var clanMemberData = await OfficialApiCall(clanMemberListUrl + clanName);
-            
+
             if (clanMemberData == null)
             {
                 response.Success = false;
@@ -931,7 +932,7 @@ namespace dotnet5_webapp.Services
             var currentPlayerNames = await _UserRepo.GetPlayerNames();
             var playersToAdd = memberNames.Except(currentPlayerNames).ToList();
             var createdPlayers = new List<String>();
-            
+
             foreach (var p in playersToAdd)
             {
                 var user = await CreateNewPlayer(p, GameVersion.RS3);
@@ -940,12 +941,12 @@ namespace dotnet5_webapp.Services
                     createdPlayers.Add(user.Username);
                 }
             }
-            
+
             // var tasks = playersToAdd.Select(u => CreateNewUser(u));
             // await Task.WhenAll(tasks);
 
             response.Data = createdPlayers;
-                return response;
+            return response;
         }
 
         public async Task<AccountType> GetAccountStatus(String username, GameVersion gameVersion)
@@ -958,7 +959,7 @@ namespace dotnet5_webapp.Services
             {
                 var hcimData = await OfficialApiCall(hcimUrl + username);
                 var imData = await OfficialApiCall(imUrl + username);
-                
+
                 //      +----------------+-------------+---------------+--------------+
                 //      |  Account Type  | IM Hiscores | HCIM Hiscores | UIM Hiscores |
                 //      +----------------+-------------+---------------+--------------+
@@ -979,7 +980,7 @@ namespace dotnet5_webapp.Services
                     {
                         // if iron data not null, but hcim null, could be a uim
                         var uimData = await OfficialApiCall(uimUrl + username);
-                        
+
                         // if iron data and uim data not null, but hcim null, must be a uim
                         if (uimData != null)
                         {
@@ -1002,7 +1003,7 @@ namespace dotnet5_webapp.Services
                 return AccountType.Main;
             }
         }
-        
+
         public async Task<ActivityResponse> FormatActivity(Activity activity, ApplicationUser? user)
         {
             var response = new ActivityResponse();
@@ -1012,6 +1013,7 @@ namespace dotnet5_webapp.Services
             response.Title = activity.Title;
             response.Details = activity.Details;
             response.DateRecorded = activity.DateRecorded;
+                   response.Importance = 0;
 
             if (activity.Likes != null)
             {
@@ -1027,8 +1029,9 @@ namespace dotnet5_webapp.Services
                 var level = activity.Details.Split("level ")[1].Replace(".", "");
                 var skill = activity.Title.Split("up ")[1].Replace(".", "");
                 response.Title = $"{skill} level {level}";
+                       response.Importance = level == "99" ? 1 : 0;
             }
-            
+
             if (activity.Title.Contains("XP in "))
             {
                 var skill = activity.Title.Split("XP in ")[1].Replace(".", "");
@@ -1038,6 +1041,8 @@ namespace dotnet5_webapp.Services
                     level = level.Substring(0, level.Length - 6) + "m";
                 }
                 response.Title = $"{level} xp in {skill}";
+                       response.Importance = (level == "50m" || level == "100m" || level == "150m") ? 1 : 0;
+                       response.Importance = level == "200m" ? 2 : 0;
             }
 
             // if (activity.Title.Contains("I killed "))
@@ -1060,13 +1065,16 @@ namespace dotnet5_webapp.Services
                 if (activity.Title.Contains("I found a pair of "))
                 {
                     item = activity.Title.Split("I found a pair of ")[1];
-                } else if (activity.Title.Contains("I found a "))
+                }
+                else if (activity.Title.Contains("I found a "))
                 {
                     item = activity.Title.Split("I found a ")[1];
-                } else if (activity.Title.Contains("I found an "))
+                }
+                else if (activity.Title.Contains("I found an "))
                 {
                     item = activity.Title.Split("I found an ")[1];
-                } else if (activity.Title.Contains("I found some "))
+                }
+                else if (activity.Title.Contains("I found some "))
                 {
                     item = activity.Title.Split("I found some ")[1];
                 }
@@ -1083,15 +1091,23 @@ namespace dotnet5_webapp.Services
                     var itemData = (JObject)itemProperty.Value;
                     var price = (int)itemData["price"];
                     response.Price = price;
+		    if(price != null){
+			    if (price > 20000000){
+				    response.Importance = 1;
+			    }
+			    if (price > 100000000){
+				    response.Importance = 2;
+			    }
+			    }
                     try
                     {
                         var itemId = (int)itemData["id"];
                         var itemDetailsResponseString =
                             await OfficialApiCall(Constants.RunescapeApiItemDetailsUrl + itemId);
-			if(itemDetailsResponseString == null)
-			{
-				return response;
-			}
+                        if (itemDetailsResponseString == null)
+                        {
+                                   return response;
+                               }
                         IDictionary<string, JToken> itemDetailsJoResponse = JObject.Parse(itemDetailsResponseString);
                         var itemDetailsProperty = itemDetailsJoResponse.First();
                         var itemDetailsData = (JObject)itemDetailsProperty.Value;
