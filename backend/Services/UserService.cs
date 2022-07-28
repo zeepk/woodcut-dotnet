@@ -1088,6 +1088,10 @@ namespace dotnet5_webapp.Services
                         var itemId = (int)itemData["id"];
                         var itemDetailsResponseString =
                             await OfficialApiCall(Constants.RunescapeApiItemDetailsUrl + itemId);
+			if(itemDetailsResponseString == null)
+			{
+				return response;
+			}
                         IDictionary<string, JToken> itemDetailsJoResponse = JObject.Parse(itemDetailsResponseString);
                         var itemDetailsProperty = itemDetailsJoResponse.First();
                         var itemDetailsData = (JObject)itemDetailsProperty.Value;
