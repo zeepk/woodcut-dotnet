@@ -167,7 +167,7 @@ namespace dotnet5_webapp.Repos
             var activities = await Context.Follow
                 .Where(f => f.User == user)
                 .Include(f => f.Player)
-                .Join(Context.Activity.OrderByDescending(a => a.DateRecorded).Take(50).Include(a => a.Player).Include(a => a.Likes), f => f.Player.Id, a => a.Player.Id, 
+                .Join(Context.Activity.OrderByDescending(a => a.DateRecorded).Take(500).Include(a => a.Player).Include(a => a.Likes), f => f.Player.Id, a => a.Player.Id, 
                     (f, a) => a)
                 .OrderByDescending(a => a.DateRecorded)
                 .ToListAsync();
