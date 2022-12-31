@@ -25,22 +25,15 @@ import Logo from "assets/images/logo.png";
 export default function NewUserLandingPage() {
   return (
     <div className="container--logged-out-user p-d-flex p-jc-between p-p-5 p-flex-wrap p-flex-md-nowrap">
+      <meta http-equiv="refresh" content="3; url = https://www.woodcut.dev" />
       <div className="container--half p-pl-1 p-pl-lg-5">
         <img className="img--home-logo" src={Logo} alt="logo" />
         <div className="container--home-text p-my-2">
           <div className="text--home-content">Thanks for using Woodcut!</div>
           <br />
           <span className="text--home-content">
-            {`Things weren't going well so I'm rewriting the site from scratch. If
-            you're interested in the process or have suggestions, stop by my `}
+            {`There's a new version of Woodcut in a different spot! Redirecting you in just a moment...`}
           </span>
-          <a
-            className="text--home-content twitter p-mx-1"
-            href={"https://www.twitch.tv/zee_pk"}
-          >
-            twitch channel
-          </a>
-          <span className="text--home-content">{" and say hi!"}</span>
         </div>
       </div>
     </div>
